@@ -11,6 +11,7 @@ import { ProductForm } from '../../styles/ProductPanel';
 interface ProductPanelProps {
 	setProductOpen: Function;
 	style?: Object;
+	submit?: Function;
 }
 
 const ProductPanel: React.FC<ProductPanelProps> = ({

@@ -4,6 +4,7 @@ export { default as Button } from './Button';
 export { MainActions } from './MainActions';
 export { ClientStyled, ClientContainer } from './Clients';
 export { InvoiceCreatorContainer, ProductItem } from './InvoiceCreator';
+export { default as SignUpFormContainer } from './SignUpFormContainer';
 export const GlobalStyle = createGlobalStyle`
 *{
   box-sizing: border-box;

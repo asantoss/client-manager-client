@@ -1,4 +1,4 @@
-import React from 'react-dom';
+import * as React from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
@@ -10,7 +10,15 @@ const Container = styled.div`
 	padding: 1em;
 	width: 100%;
 `;
-export const MainActions = ({ closeFunction, pageName }) => {
+
+interface MainActionProps {
+	closeFunction: any;
+	pageName: string;
+}
+export const MainActions: React.FC<MainActionProps> = ({
+	closeFunction,
+	pageName
+}) => {
 	return (
 		<Container>
 			<h4>{pageName}</h4>

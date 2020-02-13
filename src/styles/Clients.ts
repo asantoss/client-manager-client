@@ -12,6 +12,7 @@ export const ClientStyled = styled.div`
 		background-color: ${props => props.theme.colors.foreground};
 	}
 	.client-information {
+		display: flex;
 		color: #fff;
 		display: flex;
 		justify-content: space-evenly;
