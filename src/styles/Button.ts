@@ -22,7 +22,7 @@ export default styled('button')<ButtonProps>`
 	background-color: ${props =>
 		props.variant
 			? props.theme.colors.variants[props.variant]
-			: props.theme.colors.secondary};
+			: props.theme.colors.primary};
 	align-self: ${({ align }) => align && `${align}`};
 	&:hover {
 		opacity: 0.5;

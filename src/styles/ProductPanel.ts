@@ -13,10 +13,7 @@ export const ProductForm = styled.form`
 	[name='quantity'] {
 		width: 50px;
 	}
-	hr {
-		width: 100%;
-		border-color: black;
-	}
+
 	label {
 		color: white;
 		font-weight: 400;
@@ -35,6 +32,7 @@ export const ProductForm = styled.form`
 		display: flex;
 		justify-content: space-evenly;
 		align-items: center;
+		cursor: pointer;
 		p {
 			flex-grow: 1;
 			margin: 1em;
@@ -42,7 +40,8 @@ export const ProductForm = styled.form`
 			text-align: center;
 		}
 		.active {
-			border-bottom: 1px solid #f7a705;
+			border-bottom: ${({ theme }) =>
+				`1px solid ${theme.colors.primary}`};
 			transition: border linear 0.3s;
 		}
 		& .qty {
@@ -74,5 +73,6 @@ export const ProductForm = styled.form`
 		justify-content: space-between;
 		align-items: center;
 		color: white;
+		cursor: pointer;
 	}
 `;

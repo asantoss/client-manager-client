@@ -68,7 +68,7 @@ function App() {
 		if (!user.isLoggedIn) {
 			history.push('/login');
 		}
-	}, [user.isLoggedIn]);
+	}, [user.isLoggedIn, history]);
 	return (
 		<ThemeProvider theme={theme}>
 			<GlobalStyle />
@@ -88,7 +88,7 @@ function App() {
 									location={
 										item
 									}>
-									<Route
+									{/* <Route
 										exact
 										path='/clients'
 										render={() => {
@@ -98,7 +98,7 @@ function App() {
 												</Layout>
 											);
 										}}
-									/>
+									/> */}
 									<Route
 										exact
 										path='/invoice/creator'

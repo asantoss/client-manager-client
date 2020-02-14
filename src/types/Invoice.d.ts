@@ -4,3 +4,12 @@ export interface Product {
 	quantity: number;
 	price: number;
 }
+export interface Client {
+	firstName: string;
+	lastName: string;
+	phoneNumber: string;
+	address: string;
+	city: string;
+	zipCode: string;
+	email: string;
+}

@@ -26,7 +26,7 @@ export default function SignIn() {
 					type: 'LOGIN',
 					payload: { ...data.login }
 				});
-				history.push('/clients');
+				history.push('/invoice/creator');
 			}
 		}
 	});

@@ -4,7 +4,7 @@ import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
 const Container = styled.div`
-	color: #f7a705;
+	color: ${({ theme }) => theme.colors.primary};
 	display: flex;
 	justify-content: space-between;
 	padding: 1em;

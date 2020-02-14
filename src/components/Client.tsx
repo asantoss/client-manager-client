@@ -1,17 +1,17 @@
 import React from 'react';
 import {
-	Grid,
 	ExpansionPanel,
 	ExpansionPanelSummary,
-	Typography,
 	ExpansionPanelDetails
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { Button, ClientStyled } from '../styles/index';
-export default function Client({ client, className }) {
+import { useDispatch } from 'react-redux';
+
+export default function Client({ client }) {
 	return (
-		<ClientStyled className={className}>
+		<ClientStyled>
 			<ExpansionPanel className='client-panel'>
 				<ExpansionPanelSummary
 					expandIcon={<ExpandMore />}>

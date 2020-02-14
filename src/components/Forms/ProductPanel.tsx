@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
-import { Input, IconButton, Typography } from '@material-ui/core';
+import { Input, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { useDispatch } from 'react-redux';
 import { useSpring } from 'react-spring';
@@ -44,7 +44,6 @@ const ProductPanel: React.FC<ProductPanelProps> = ({
 				payload: { ...product, quantity }
 			});
 			saveProductToLocalStorage(product);
-			// setProductOpen(s => !s);
 			formik.resetForm();
 		}
 	});
@@ -74,7 +73,7 @@ const ProductPanel: React.FC<ProductPanelProps> = ({
 		localStorage.removeItem('products');
 	};
 	return (
-		<ProductPanelStyled style={style}>
+		<ProductPanelStyled style={style} className='invoice-panel'>
 			<MainActions
 				pageName='Products'
 				closeFunction={() =>
@@ -291,7 +290,6 @@ export default ProductPanel;
 
 function saveProductToLocalStorage(product: Product): void {
 	const localStorageProducts = localStorage.getItem('products');
-	//@ts-ignore
 	const localStorageProductsParsed: Product[] =
 		JSON.parse(localStorageProducts) || [];
 	const filteredProducts = localStorageProductsParsed.filter(
@@ -302,13 +300,11 @@ function saveProductToLocalStorage(product: Product): void {
 				item.price === product.price &&
 				item.quantity === product.quantity
 			) {
-				return item;
-			} else {
-				return;
+				return true;
 			}
+			return false;
 		}
 	);
-	debugger;
 	if (filteredProducts.length > 0) {
 		return;
 	} else {

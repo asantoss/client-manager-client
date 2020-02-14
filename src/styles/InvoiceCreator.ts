@@ -7,9 +7,14 @@ export const InvoiceCreatorContainer = styled.div`
 	justify-content: space-evenly;
 	background-color: ${({ theme }) => theme.colors.background};
 	color: white;
+
+	hr {
+		width: 100%;
+		border-color: ${({ theme }) => theme.colors.background};
+	}
 	.panel-actions {
 		font-size: 0.8em;
-		color: #f7a705;
+		color: ${({ theme }) => theme.colors.primary};
 	}
 	& > div {
 		width: 100%;
@@ -26,6 +31,12 @@ export const InvoiceCreatorContainer = styled.div`
 		margin: 1em;
 		display: flex;
 		justify-content: space-evenly;
+	}
+	.invoice-panel {
+		background-color: ${({ theme }) => theme.colors.foreground};
+		margin: 0.5em;
+		padding: 1em;
+		border-radius: 0.2em;
 	}
 `;
 

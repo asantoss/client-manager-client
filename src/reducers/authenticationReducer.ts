@@ -1,9 +1,12 @@
+import Client from '../types/Invoice';
+
 const initialState = {
 	isLoggedIn: false,
 	email: null,
 	id: null,
 	firstName: null,
-	lastName: null
+	lastName: null,
+	clients: null
 };
 
 export interface AuthState {
@@ -12,6 +15,7 @@ export interface AuthState {
 	id: number;
 	firstName: string;
 	lastName: string;
+	clients: [];
 }
 
 export default (state: AuthState = initialState, action: any) => {

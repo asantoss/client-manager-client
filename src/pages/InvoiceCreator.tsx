@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
 import ClientInformation from '../components/Forms/ClientInformation';
-import { Typography, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import ProductPanel from '../components/Forms/ProductPanel';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddCircle } from '@material-ui/icons';
@@ -9,23 +9,32 @@ import { useLocation } from 'react-router-dom';
 import { useTransition } from 'react-spring';
 import { MyDocument } from '../components/createPdf';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
+import Clients from '../components/Clients';
+import ClientPanel from '../components/Forms/ClientPanel';
 
 export default function InvoiceCreator() {
 	const [isProductOpen, setProductOpen] = useState(false);
 	const [isViewer, setisViewerOpen] = useState(false);
 	const productTransition = useTransition(isProductOpen, null, {
-		from: { opacity: 0, marginTop: 200 },
-		enter: { opacity: 1, marginTop: 0 },
+		from: { marginTop: 200 },
+		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200 },
-		config: { duration: 500 }
+		config: { duration: 250 }
 	});
 	const viewerTransition = useTransition(isViewer, null, {
-		from: { opacity: 0, marginTop: 200 },
-		enter: { opacity: 1, marginTop: 0 },
+		from: { marginTop: 200 },
+		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200 },
-		config: { duration: 500 }
+		config: { duration: 250 }
 	});
+
 	const [isClientOpen, setClientOpen] = useState(false);
+	const clientTransition = useTransition(isClientOpen, null, {
+		from: { marginTop: 200 },
+		enter: { marginTop: 0 },
+		leave: { opacity: 0, marginTop: 200 },
+		config: { duration: 250 }
+	});
 	const invoiceData = useSelector((state: any) => state.invoice);
 	const { state } = useLocation();
 	const dispatch = useDispatch();
@@ -41,7 +50,7 @@ export default function InvoiceCreator() {
 				payload: { ...state }
 			});
 		}
-	}, [state]);
+	}, [state, dispatch]);
 
 	const totalCost = invoiceData.products.reduce(
 		(prev: number, acc: any) => {
@@ -57,9 +66,9 @@ export default function InvoiceCreator() {
 	return (
 		<InvoiceCreatorContainer>
 			<div className='invoice-panel'>
-				<Typography>CUSTOMER</Typography>
+				<h2>CUSTOMER</h2>
 				<hr />
-				{isClientOpen && (
+				{/* {isClientOpen && (
 					<ClientInformation
 						setClientOpen={
 							setClientOpen
@@ -68,7 +77,7 @@ export default function InvoiceCreator() {
 							isClientOpen
 						}
 					/>
-				)}
+				)} */}
 				{!invoiceData.client.firstName &&
 				!invoiceData.client.email ? (
 					<IconButton
@@ -87,7 +96,7 @@ export default function InvoiceCreator() {
 					</IconButton>
 				) : (
 					<>
-						<Typography>
+						<p>
 							{
 								invoiceData
 									.client
@@ -98,20 +107,20 @@ export default function InvoiceCreator() {
 									.client
 									.lastName
 							}
-						</Typography>
-						<Typography>
+						</p>
+						<p>
 							{
 								invoiceData
 									.client
 									.email
 							}
-						</Typography>
+						</p>
 					</>
 				)}
 			</div>
-			<div className='invoice-panel-products'>
+			<div className='invoice-panel'>
 				<hr />
-				<Typography>Products</Typography>
+				<h2>Products</h2>
 				<hr style={{ margin: 0 }} />
 				{invoiceData.products &&
 					invoiceData.products.map(
@@ -183,6 +192,7 @@ export default function InvoiceCreator() {
 								</Modal>
 							);
 						}
+						return null;
 					}
 				)}
 
@@ -211,6 +221,30 @@ export default function InvoiceCreator() {
 						);
 					}
 				)}
+
+				{clientTransition.map(
+					({ item, key, props }) => {
+						return (
+							item &&
+							!isProductOpen &&
+							!isViewer && (
+								<Modal
+									key={
+										key
+									}>
+									<ClientPanel
+										style={
+											props
+										}
+										setClientOpen={
+											setClientOpen
+										}
+									/>
+								</Modal>
+							)
+						);
+					}
+				)}
 				<IconButton
 					className='panel-actions'
 					onClick={() => {
@@ -224,18 +258,16 @@ export default function InvoiceCreator() {
 			</div>
 			<div className='invoice-panel'>
 				<hr />
-				<Typography>Details</Typography>
+				<h2>Details</h2>
 				<hr />
-				<Typography>
-					Tax: {converToCurrency(tax)} $
-				</Typography>
-				<Typography variant='h6'>
+				<h4>Tax: {converToCurrency(tax)} $</h4>
+				<h3>
 					Total:{' '}
 					{converToCurrency(
 						tax + totalCost
 					)}{' '}
 					$
-				</Typography>
+				</h3>
 				<div className='invoice-actions'>
 					<Button variant='success'>
 						Save
