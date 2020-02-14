@@ -5,11 +5,26 @@ export interface Product {
 	price: number;
 }
 export interface Client {
+	id?: number;
 	firstName: string;
 	lastName: string;
-	phoneNumber: string;
+	email: string;
+	phoneNumber?: string;
+	address?: string;
+	city?: string;
+	zipCode?: string;
+}
+export interface Company {
+	companyName: string;
 	address: string;
+	phoneNumber: string;
 	city: string;
 	zipCode: string;
 	email: string;
+}
+
+export default interface InvoiceType {
+	client: Client;
+	company: Company;
+	products: Product[];
 }

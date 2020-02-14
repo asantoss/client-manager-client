@@ -1,12 +1,12 @@
 import Client from '../types/Invoice';
 
-const initialState = {
+const initialState: AuthState = {
 	isLoggedIn: false,
-	email: null,
-	id: null,
-	firstName: null,
-	lastName: null,
-	clients: null
+	email: '',
+	id: 0,
+	firstName: '',
+	lastName: '',
+	clients: []
 };
 
 export interface AuthState {

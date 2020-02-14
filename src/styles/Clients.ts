@@ -38,10 +38,11 @@ export const ClientStyled = styled.div`
 	}
 `;
 
-export const ClientPanelStyled = styled(animated.div)`
+export const ClientPanelStyled = styled.div`
 	display: flex;
 	flex-direction: column;
 	overflow-x: hidden;
+	align-items: center;
 	background-color: ${props => props.theme.colors.foreground};
 	height: 60vh;
 	label {
@@ -51,10 +52,24 @@ export const ClientPanelStyled = styled(animated.div)`
 		margin: 1em;
 	}
 	.client-list {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		padding: 2em;
+	}
+	.client {
+		cursor: pointer;
+		font-size: 1.5em;
+		color: white;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		.client {
+		margin: 0.2em;
+		width: 100%;
+		border-bottom: 0.2em solid
+			${({ theme }) => theme.colors.background};
+		& > * {
+			margin: 0.1em 0;
 		}
 	}
 `;

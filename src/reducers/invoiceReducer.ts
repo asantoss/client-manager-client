@@ -1,6 +1,8 @@
-import { Product } from '../types/Invoice.d';
-const initialState = {
+import InvoiceType from '../types/Invoice.d';
+
+const initialState: InvoiceType = {
 	client: {
+		id: 0,
 		firstName: '',
 		lastName: '',
 		email: '',
@@ -14,30 +16,11 @@ const initialState = {
 		address: '',
 		phoneNumber: '',
 		city: '',
-		zipCode: ''
+		zipCode: '',
+		email: ''
 	},
 	products: []
 };
-
-export interface InvoiceState {
-	client: {
-		firstName: string;
-		lastName: string;
-		email: string;
-		phoneNumber: string;
-		address: string;
-		city: string;
-		zipCode: string;
-	};
-	company: {
-		companyName: string;
-		address: string;
-		phoneNumber: string;
-		city: string;
-		zipCode: string;
-	};
-	products: Product[];
-}
 
 export default (state = initialState, action: any) => {
 	const { type, payload } = action;

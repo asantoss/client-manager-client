@@ -43,9 +43,6 @@ export default function SignIn() {
 		setPassShowed(!isPasswordShown);
 	};
 
-	const handleMouseDownPassword = event => {
-		event.preventDefault();
-	};
 	return (
 		<SignInForm onSubmit={formik.handleSubmit}>
 			<Typography variant='h2'>Sign In</Typography>
@@ -76,9 +73,6 @@ export default function SignIn() {
 								aria-label='toggle password visibility'
 								onClick={
 									handleShowPassword
-								}
-								onMouseDown={
-									handleMouseDownPassword
 								}>
 								{isPasswordShown ? (
 									<Visibility />
@@ -91,7 +85,7 @@ export default function SignIn() {
 				}}
 			/>
 			<Link to='/register'>Don't have an account?</Link>
-			<Button type='submit' variant='success'>
+			<Button type='submit' className='success'>
 				Submit
 			</Button>
 		</SignInForm>

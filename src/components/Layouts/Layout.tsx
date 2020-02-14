@@ -1,8 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import Navbar from './Navbar';
 import { LayoutStyled } from '../../styles';
 
-export default function Layout({ children }) {
+interface LayoutProps {
+	children: any;
+}
+const Layout: React.FC<LayoutProps> = ({ children }) => {
 	return (
 		<LayoutStyled>
 			<main>{children}</main>
@@ -11,4 +14,6 @@ export default function Layout({ children }) {
 			</footer>
 		</LayoutStyled>
 	);
-}
+};
+
+export default Layout;

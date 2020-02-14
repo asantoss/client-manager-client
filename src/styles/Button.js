@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 
-interface ButtonProps {
-	variant?: string;
-	align?: string;
-}
-
-export default styled('button')<ButtonProps>`
+export default styled.button`
 	color: #fff;
 	padding: 6px 16px;
 	min-width: 64px;
@@ -19,12 +14,18 @@ export default styled('button')<ButtonProps>`
 	letter-spacing: 0.02857em;
 	border: 0;
 	cursor: pointer;
-	background-color: ${props =>
-		props.variant
-			? props.theme.colors.variants[props.variant]
-			: props.theme.colors.primary};
-	align-self: ${({ align }) => align && `${align}`};
+	background-color: ${props => props.theme.colors.primary};
+	/* align-self: ${({ align }) => typeof align === 'string' && `${align}`}; */
 	&:hover {
 		opacity: 0.5;
 	}
+
+	${props =>
+		Object.keys(props.theme.colors.variants).map(variant => {
+			return `
+		&.${variant}{
+			background-color: ${props.theme.colors.variants[variant]}
+		}
+		`;
+		})}
 `;

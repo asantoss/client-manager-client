@@ -35,13 +35,9 @@ const ProductPanel: React.FC<ProductPanelProps> = ({
 			quantity: 1
 		},
 		onSubmit: (product: Product) => {
-			const quantity =
-				product.quantity > 1
-					? product.quantity
-					: 1;
 			dispatch({
 				type: 'ADD_PRODUCT',
-				payload: { ...product, quantity }
+				payload: { ...product }
 			});
 			saveProductToLocalStorage(product);
 			formik.resetForm();
@@ -60,7 +56,9 @@ const ProductPanel: React.FC<ProductPanelProps> = ({
 		return () => {};
 	}, [localStorageProducts]);
 	const loadProduct = (product: Product): void => {
-		setIsflat(product.quantity > 1 ? false : true);
+		if (typeof product.quantity === 'number') {
+			setIsflat(product.quantity > 1 ? false : true);
+		}
 		formik.setValues(
 			{
 				...product
@@ -277,8 +275,7 @@ const ProductPanel: React.FC<ProductPanelProps> = ({
 					)}
 				<Button
 					type='submit'
-					variant='success'
-					align='center'>
+					className='success'>
 					Save
 				</Button>
 			</ProductForm>
@@ -290,30 +287,34 @@ export default ProductPanel;
 
 function saveProductToLocalStorage(product: Product): void {
 	const localStorageProducts = localStorage.getItem('products');
-	const localStorageProductsParsed: Product[] =
-		JSON.parse(localStorageProducts) || [];
-	const filteredProducts = localStorageProductsParsed.filter(
-		(item: Product, index: number) => {
-			if (
-				item.productName ===
-					product.productName &&
-				item.price === product.price &&
-				item.quantity === product.quantity
-			) {
-				return true;
+	if (typeof localStorageProducts === 'string') {
+		const localStorageProductsParsed: Product[] =
+			JSON.parse(localStorageProducts) || [];
+		const filteredProducts = localStorageProductsParsed.filter(
+			(item: Product, index: number) => {
+				if (
+					item.productName ===
+						product.productName &&
+					item.price ===
+						product.price &&
+					item.quantity ===
+						product.quantity
+				) {
+					return true;
+				}
+				return false;
 			}
-			return false;
-		}
-	);
-	if (filteredProducts.length > 0) {
-		return;
-	} else {
-		return localStorage.setItem(
-			'products',
-			JSON.stringify([
-				...localStorageProductsParsed,
-				product
-			])
 		);
+		if (filteredProducts.length > 0) {
+			return;
+		} else {
+			return localStorage.setItem(
+				'products',
+				JSON.stringify([
+					...localStorageProductsParsed,
+					product
+				])
+			);
+		}
 	}
 }

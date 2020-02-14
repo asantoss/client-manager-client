@@ -47,9 +47,6 @@ export default function SignUp() {
 		setPassShowed(!isPasswordShown);
 	};
 
-	const handleMouseDownPassword = event => {
-		event.preventDefault();
-	};
 	const [handleRegister, { loading }] = useMutation(REGISTER);
 	const formik = useFormik({
 		initialValues: {
@@ -81,51 +78,18 @@ export default function SignUp() {
 		<SignUpFormContainer onSubmit={formik.handleSubmit}>
 			<h1>Sign Up</h1>
 			<InputLabel />
-			{Object.keys(formik.values).map(value => {
-				if (value !== 'password') {
-					return (
-						<TextField
-							key={
-								value +
-								''
-							}
-							name={
-								value
-							}
-							label={
-								value
-							}
-							variant='outlined'
-							onChange={
-								formik.handleChange
-							}
-							value={
-								formik
-									.values[
-									value
-								]
-							}
-							helperText={
-								formik
-									.errors[
-									value
-								] &&
-								formik
-									.errors[
-									value
-								]
-							}
-							error={
-								!!formik
-									.errors[
-									value
-								]
-							}
-						/>
-					);
+			<TextField
+				name='email'
+				label='Email'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.email}
+				helperText={
+					formik.errors.email &&
+					formik.errors.email
 				}
-				return null;
-			})}
+				error={!!formik.errors.email}
+			/>
 			<TextField
 				variant='outlined'
 				type={
@@ -148,9 +112,6 @@ export default function SignUp() {
 								aria-label='toggle password visibility'
 								onClick={
 									handleShowPassword
-								}
-								onMouseDown={
-									handleMouseDownPassword
 								}>
 								{isPasswordShown ? (
 									<Visibility />
@@ -161,6 +122,70 @@ export default function SignUp() {
 						</InputAdornment>
 					)
 				}}
+			/>
+			<TextField
+				name='firstName'
+				label='First Name'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.firstName}
+				helperText={
+					formik.errors.firstName &&
+					formik.errors.firstName
+				}
+				error={!!formik.errors.firstName}
+			/>
+			<TextField
+				name='lastName'
+				label='Last Name'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.lastName}
+				helperText={
+					formik.errors.lastName &&
+					formik.errors.lastName
+				}
+				error={!!formik.errors.lastName}
+			/>
+
+			<TextField
+				name='phoneNumber'
+				label='Phone Number'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.phoneNumber}
+				helperText={
+					formik.errors.phoneNumber &&
+					formik.errors.phoneNumber
+				}
+				error={!!formik.errors.phoneNumber}
+			/>
+
+			<TextField
+				name='address'
+				label='Address'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.address}
+				helperText={
+					formik.errors.address &&
+					formik.errors.address
+				}
+				error={!!formik.errors.address}
+			/>
+			<TextField
+				name='city'
+				label='City'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.city}
+			/>
+			<TextField
+				name='companyName'
+				label='Company Name'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.companyName}
 			/>
 			<Button
 				variant='contained'

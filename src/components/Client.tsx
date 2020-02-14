@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
 	ExpansionPanel,
 	ExpansionPanelSummary,
@@ -7,9 +7,13 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { Button, ClientStyled } from '../styles/index';
-import { useDispatch } from 'react-redux';
+import { Client } from '../types/Invoice';
 
-export default function Client({ client }) {
+interface ClientProps {
+	client: Client;
+}
+
+const Client: React.FC<ClientProps> = ({ client }) => {
 	return (
 		<ClientStyled>
 			<ExpansionPanel className='client-panel'>
@@ -63,7 +67,7 @@ export default function Client({ client }) {
 									Quote
 								</Button>
 							</Link>
-							<Button variant='danger'>
+							<Button className='danger'>
 								Delete
 							</Button>
 						</div>
@@ -72,4 +76,5 @@ export default function Client({ client }) {
 			</ExpansionPanel>
 		</ClientStyled>
 	);
-}
+};
+export default Client;

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { useFormik } from 'formik';
 import { useMutation } from '@apollo/react-hooks';
 import * as Yup from 'yup';
-import { ClientInformationForm } from '../../styles';
 import {
 	TextField,
 	Button,
@@ -10,8 +9,9 @@ import {
 	Typography
 } from '@material-ui/core';
 import { css } from '@emotion/core';
-
+import { ClientInformationForm } from '../../styles/Clients';
 import { useDispatch } from 'react-redux';
+import { Client } from '../../types/Invoice';
 const ClientSchema = Yup.object().shape({
 	firstName: Yup.string()
 		.min(2, 'Too Short!')
@@ -26,8 +26,16 @@ const ClientSchema = Yup.object().shape({
 		.required('Required')
 });
 
-export default function ClientInformation({ setClientOpen, isClientOpen }) {
-	const [loading, setLoading] = useState(false);
+interface ClientInformationProps {
+	setClientOpen: Function;
+	isClientOpen: Boolean;
+}
+
+const ClientInformation: React.FC<ClientInformationProps> = ({
+	setClientOpen,
+	isClientOpen
+}) => {
+	const [loading, setLoading] = React.useState(false);
 	const dispatch = useDispatch();
 	const formik = useFormik({
 		initialValues: {
@@ -44,7 +52,7 @@ export default function ClientInformation({ setClientOpen, isClientOpen }) {
 			handleNext(values);
 		}
 	});
-	const handleNext = values => {
+	const handleNext = (values: Client) => {
 		setLoading(!loading);
 		dispatch({ type: 'SET_CLIENT', payload: values });
 		setTimeout(() => setClientOpen(!isClientOpen), 5000);
@@ -67,42 +75,24 @@ export default function ClientInformation({ setClientOpen, isClientOpen }) {
 		);
 	return (
 		<ClientInformationForm onSubmit={formik.handleSubmit}>
-			{Object.keys(formik.values).map(value => {
-				return (
-					<TextField
-						className='client_input'
-						key={value + ''}
-						name={value}
-						label={value}
-						variant='outlined'
-						onChange={
-							formik.handleChange
-						}
-						value={
-							formik
-								.values[
-								value
-							]
-						}
-						helperText={
-							formik
-								.errors[
-								value
-							] &&
-							formik
-								.errors[
-								value
-							]
-						}
-						error={
-							!!formik
-								.errors[
-								value
-							]
-						}
-					/>
-				);
-			})}
+			<TextField
+				className='client_input'
+				name='firstName'
+				label='First Name'
+				variant='outlined'
+				onChange={formik.handleChange}
+				onBlur={formik.handleChange}
+				value={formik.values.firstName}
+			/>
+			<TextField
+				className='client_input'
+				name='firstName'
+				label='First Name'
+				variant='outlined'
+				onChange={formik.handleChange}
+				onBlur={formik.handleChange}
+				value={formik.values.firstName}
+			/>
 			<Button
 				style={{
 					color: 'white',
@@ -116,4 +106,6 @@ export default function ClientInformation({ setClientOpen, isClientOpen }) {
 			</Button>
 		</ClientInformationForm>
 	);
-}
+};
+
+export default ClientInformation;

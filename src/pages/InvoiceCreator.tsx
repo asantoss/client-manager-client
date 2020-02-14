@@ -9,8 +9,8 @@ import { useLocation } from 'react-router-dom';
 import { useTransition } from 'react-spring';
 import { MyDocument } from '../components/createPdf';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
-import Clients from '../components/Clients';
 import ClientPanel from '../components/Forms/ClientPanel';
+import { animated } from 'react-spring';
 
 export default function InvoiceCreator() {
 	const [isProductOpen, setProductOpen] = useState(false);
@@ -18,22 +18,22 @@ export default function InvoiceCreator() {
 	const productTransition = useTransition(isProductOpen, null, {
 		from: { marginTop: 200 },
 		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200 },
-		config: { duration: 250 }
+		leave: { opacity: 0, marginTop: 200, display: 'none' },
+		config: { duration: 500 }
 	});
 	const viewerTransition = useTransition(isViewer, null, {
-		from: { marginTop: 200 },
+		from: { marginTop: 200, height: 0 },
 		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200 },
-		config: { duration: 250 }
+		leave: { opacity: 0, marginTop: 200, display: 'none' },
+		config: { duration: 500 }
 	});
 
 	const [isClientOpen, setClientOpen] = useState(false);
 	const clientTransition = useTransition(isClientOpen, null, {
 		from: { marginTop: 200 },
 		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200 },
-		config: { duration: 250 }
+		leave: { opacity: 0, marginTop: 200, display: 'none' },
+		config: { duration: 500 }
 	});
 	const invoiceData = useSelector((state: any) => state.invoice);
 	const { state } = useLocation();
@@ -198,6 +198,7 @@ export default function InvoiceCreator() {
 
 				{viewerTransition.map(
 					({ item, key, props }) => {
+						//@ts-ignore
 						return (
 							item &&
 							!isProductOpen && (
@@ -205,17 +206,19 @@ export default function InvoiceCreator() {
 									key={
 										key
 									}>
-									<MyDocument
+									<animated.div
 										style={
 											props
-										}
-										setIsViewerOpen={
-											setisViewerOpen
-										}
-										invoiceData={
-											invoiceData
-										}
-									/>
+										}>
+										<MyDocument
+											setIsViewerOpen={
+												setisViewerOpen
+											}
+											invoiceData={
+												invoiceData
+											}
+										/>
+									</animated.div>
 								</Modal>
 							)
 						);
@@ -232,14 +235,16 @@ export default function InvoiceCreator() {
 									key={
 										key
 									}>
-									<ClientPanel
+									<animated.div
 										style={
 											props
-										}
-										setClientOpen={
-											setClientOpen
-										}
-									/>
+										}>
+										<ClientPanel
+											setClientOpen={
+												setClientOpen
+											}
+										/>
+									</animated.div>
 								</Modal>
 							)
 						);
@@ -269,18 +274,18 @@ export default function InvoiceCreator() {
 					$
 				</h3>
 				<div className='invoice-actions'>
-					<Button variant='success'>
+					<Button className='success'>
 						Save
 					</Button>
 					<Button
-						variant='success'
+						className='success'
 						onClick={
 							handleShowViewer
 						}>
 						Save PDF
 					</Button>
 					<Button
-						variant='success'
+						className='success'
 						onClick={
 							handleShowViewer
 						}>

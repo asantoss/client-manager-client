@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import AuthReducer from './authenticationReducer';
 import InvoiceReducer from './invoiceReducer';
 import { AuthState } from './authenticationReducer';
-import { InvoiceState } from './invoiceReducer';
+import InvoiceType from '../types/Invoice';
 export default combineReducers({
 	user: AuthReducer,
 	invoice: InvoiceReducer
@@ -10,5 +10,5 @@ export default combineReducers({
 
 export interface AppState {
 	user: AuthState;
-	invoice: InvoiceState;
+	invoice: InvoiceType;
 }

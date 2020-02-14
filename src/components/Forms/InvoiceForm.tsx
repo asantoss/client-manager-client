@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 
 import {
 	TextField,
@@ -8,12 +8,11 @@ import {
 	Fab
 } from '@material-ui/core';
 import { css } from '@emotion/core';
-import { Add } from '@material-ui/icons';
-import ProductPanel from './ProductPanel';
+import { Product } from '../../types/Invoice.d';
 
 export default function InvoiceForm() {
-	const [product, setProduct] = useState([]);
-	const handleAddProduct = product => {
+	const [product, setProduct] = React.useState<Product[]>([]);
+	const handleAddProduct = (product: Product) => {
 		setProduct(s => [...s, product]);
 	};
 	return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, withRouter, Link } from 'react-router-dom';
+import { NavLink, withRouter, Link, useHistory } from 'react-router-dom';
 import { css } from '@emotion/core';
 import { AppBar, Toolbar, IconButton } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -38,14 +38,15 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-function Topbar(props) {
+function Topbar() {
 	const { isLoggedIn } = useSelector((state: AppState) => state.user);
 	const dispatch = useDispatch();
+	const history = useHistory();
 	const theme = useTheme();
 	const classes: any = useStyles(theme);
 	const handleLogout = () => {
 		dispatch({ type: 'LOGOUT' });
-		props.history.push('/login');
+		history.push('/login');
 	};
 	return (
 		<div className={classes.root}>
