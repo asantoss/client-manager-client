@@ -34,13 +34,8 @@ export default (state = initialState, action: any) => {
 			return {
 				...state,
 				products: [
-					...state.products.slice(
-						0,
-						payload.index
-					),
-					...state.products.slice(
-						payload.index + 1
-					)
+					...state.products.slice(0, payload.index),
+					...state.products.slice(payload.index + 1)
 				]
 			};
 		case 'SET_CLIENT':

@@ -5,9 +5,6 @@ import { Route, Switch } from 'react-router-dom';
 import SignUp from './components/authentication/SignUp';
 import Clients from './components/Clients';
 import SignIn from './components/authentication/SignIn';
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -17,30 +14,7 @@ import TopBar from './components/Layouts/TopBar';
 import { animated, useTransition } from 'react-spring';
 import theme from './styles/theme';
 import { GlobalStyle } from './styles';
-
-const cache = new InMemoryCache();
-const link = new HttpLink({
-	uri: '/graphql',
-	credentials: 'same-origin'
-});
-
-const client = new ApolloClient({
-	cache,
-	link,
-	name: 'React Front End Client',
-	defaultOptions: {
-		watchQuery: {
-			fetchPolicy: 'cache-and-network'
-		},
-		query: {
-			fetchPolicy: 'network-only',
-			errorPolicy: 'all'
-		},
-		mutate: {
-			errorPolicy: 'all'
-		}
-	}
-});
+import { client } from './cache';
 
 interface user {
 	isLoggedIn: Boolean;

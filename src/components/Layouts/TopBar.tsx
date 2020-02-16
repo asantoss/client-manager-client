@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, withRouter, Link, useHistory } from 'react-router-dom';
+import { NavLink, withRouter, useHistory } from 'react-router-dom';
 import { css } from '@emotion/core';
 import { AppBar, Toolbar, IconButton } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -50,9 +50,7 @@ function Topbar() {
 	};
 	return (
 		<div className={classes.root}>
-			<AppBar
-				position='fixed'
-				className={classes.appBar}>
+			<AppBar position='fixed' className={classes.appBar}>
 				<Toolbar
 					css={css`
 						justify-content: space-between;
@@ -64,9 +62,7 @@ function Topbar() {
 						}
 					`}>
 					{isLoggedIn ? (
-						<NavLink
-							to='/login'
-							activeClassName='current'>
+						<NavLink to='/login' activeClassName='current'>
 							<IconButton edge='end'>
 								<ExitToApp />
 							</IconButton>
@@ -75,18 +71,14 @@ function Topbar() {
 						<IconButton
 							edge='start'
 							aria-label='open drawer'
-							onClick={
-								handleLogout
-							}>
+							onClick={handleLogout}>
 							<AssignmentInd />
 						</IconButton>
 					)}
 					{/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
             <Add />
           </Fab> */}
-					<NavLink
-						to='/'
-						activeClassName='current'>
+					<NavLink to='/' activeClassName='current'>
 						<IconButton edge='end'>
 							<More />
 						</IconButton>

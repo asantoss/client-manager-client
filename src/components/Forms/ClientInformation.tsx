@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
-import { useMutation } from '@apollo/react-hooks';
+// import { useMutation } from '@apollo/react-hooks';
 import * as Yup from 'yup';
 import {
 	TextField,
@@ -65,10 +65,7 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 					flex-direction: column;
 					align-items: center;
 				`}>
-				<Typography>
-					Setting all of the client
-					information...
-				</Typography>
+				<Typography>Setting all of the client information...</Typography>
 				<br />
 				<CircularProgress color='secondary' />
 			</div>

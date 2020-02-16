@@ -8,7 +8,7 @@ const Container = styled.div`
 	display: flex;
 	justify-content: space-between;
 	padding: 1em;
-	width: 100%;
+	max-width: 600px;
 `;
 
 interface MainActionProps {
@@ -22,9 +22,7 @@ export const MainActions: React.FC<MainActionProps> = ({
 	return (
 		<Container>
 			<h4>{pageName}</h4>
-			<IconButton
-				color='inherit'
-				onClick={closeFunction}>
+			<IconButton color='inherit' onClick={() => closeFunction(false)}>
 				<Close />
 			</IconButton>
 		</Container>

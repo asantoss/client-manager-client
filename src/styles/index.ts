@@ -22,7 +22,7 @@ body {
   background-color: ${({ theme }) => theme.colors.background};
   font-size: 12px;
   font-family: 'Hind', sans-serif;
-  max-width: 550px;
+  max-width: 600px;
   margin: 70px auto; 
   @media only screen and (min-width: 700px) {
 	  overflow: hidden;
@@ -85,8 +85,8 @@ export const ModalStyled = styled.div`
 	background-color: ${props => props.theme.colors.background};
 	position: absolute;
 	@media (min-width: 700px) {
-		width: 550px;
 		height: 60vh;
+		max-width: 600px;
 	}
 `;
 

@@ -7,53 +7,31 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { Button, ClientStyled } from '../styles/index';
-import { Client } from '../types/Invoice';
+import { Client as ClientType } from '../types/Invoice';
 
 interface ClientProps {
-	client: Client;
+	client: ClientType;
 }
 
 const Client: React.FC<ClientProps> = ({ client }) => {
 	return (
 		<ClientStyled>
 			<ExpansionPanel className='client-panel'>
-				<ExpansionPanelSummary
-					expandIcon={<ExpandMore />}>
+				<ExpansionPanelSummary expandIcon={<ExpandMore />}>
 					<h5>
-						{client.firstName}{' '}
-						{client.lastName}
+						{client.firstName} {client.lastName}
 					</h5>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
 					<div className='client-information'>
 						<p>Phone Number:</p>
-						<a
-							href={`tel:${client.phoneNumber}`}>
-							{
-								client.phoneNumber
-							}
-						</a>{' '}
+						<a href={`tel:${client.phoneNumber}`}>{client.phoneNumber}</a>{' '}
 						<br />
 						<p>Email:</p>
-						<span>
-							{
-								client.email
-							}
-						</span>{' '}
-						<br />
+						<span>{client.email}</span> <br />
 						<p>Address: </p>
 						<span>
-							{
-								client.address
-							}{' '}
-							<br />{' '}
-							{
-								client.city
-							}{' '}
-							<br />{' '}
-							{
-								client.zipCode
-							}
+							{client.address} <br /> {client.city} <br /> {client.zipCode}
 						</span>{' '}
 						<div className='client-actions'>
 							<Link
@@ -63,13 +41,9 @@ const Client: React.FC<ClientProps> = ({ client }) => {
 										...client
 									}
 								}}>
-								<Button>
-									Quote
-								</Button>
+								<Button>Quote</Button>
 							</Link>
-							<Button className='danger'>
-								Delete
-							</Button>
+							<Button className='danger'>Delete</Button>
 						</div>
 					</div>
 				</ExpansionPanelDetails>

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { animated } from 'react-spring';
 
 export const ClientContainer = styled.div`
 	display: flex;
@@ -67,8 +66,7 @@ export const ClientPanelStyled = styled.div`
 		align-items: center;
 		margin: 0.2em;
 		width: 100%;
-		border-bottom: 0.2em solid
-			${({ theme }) => theme.colors.background};
+		border-bottom: 0.2em solid ${({ theme }) => theme.colors.background};
 		& > * {
 			margin: 0.1em 0;
 		}

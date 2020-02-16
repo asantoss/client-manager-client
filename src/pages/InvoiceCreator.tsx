@@ -9,6 +9,7 @@ import { useTransition } from 'react-spring';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
 import ClientPanel from '../components/Forms/ClientPanel';
 import { animated } from 'react-spring';
+import CreatePdf from '../components/createPdf';
 
 export default function InvoiceCreator() {
 	const [isProductOpen, setProductOpen] = useState(false);
@@ -19,12 +20,12 @@ export default function InvoiceCreator() {
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
 		config: { duration: 200 }
 	});
-	// const viewerTransition = useTransition(isViewer, null, {
-	// 	from: { marginTop: 200, height: 0 },
-	// 	enter: { marginTop: 0 },
-	// 	leave: { opacity: 0, marginTop: 200, display: 'none' },
-	// 	config: { duration: 200 }
-	// });
+	const viewerTransition = useTransition(isViewer, null, {
+		from: { marginTop: 200, height: 0 },
+		enter: { marginTop: 0 },
+		leave: { opacity: 0, marginTop: 200, display: 'none' },
+		config: { duration: 200 }
+	});
 
 	const [isClientOpen, setClientOpen] = useState(false);
 	const clientTransition = useTransition(isClientOpen, null, {
@@ -50,23 +51,19 @@ export default function InvoiceCreator() {
 		}
 	}, [state, dispatch]);
 
-	const totalCost = invoiceData.products.reduce(
-		(prev: number, acc: any) => {
-			if (acc.quantity) {
-				return prev + acc.price * acc.quantity;
-			}
-			return prev + acc.price;
-		},
-		0
-	);
+	const totalCost = invoiceData.products.reduce((prev: number, acc: any) => {
+		if (acc.quantity) {
+			return prev + acc.price * acc.quantity;
+		}
+		return prev + acc.price;
+	}, 0);
 	const tax = totalCost * 0.07;
 	const handleSendClient = () => {
 		fetch('/api/email', {
 			method: 'POST',
 			credentials: 'include',
 			headers: {
-				Accept:
-					'application/json, text/plain, */*',
+				Accept: 'application/json, text/plain, */*',
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ invoiceData })
@@ -89,48 +86,20 @@ export default function InvoiceCreator() {
 						}
 					/>
 				)} */}
-				{!invoiceData.client.firstName &&
-				!invoiceData.client.email ? (
+				{!invoiceData.client.firstName && !invoiceData.client.email ? (
 					<IconButton
 						className='panel-actions'
 						onClick={() => {
-							setClientOpen(
-								!isClientOpen
-							);
+							setClientOpen(!isClientOpen);
 						}}>
-						<AddCircle />{' '}
-						<p>
-							Add
-							Customer
-							Information
-						</p>
+						<AddCircle /> <p>Add Customer Information</p>
 					</IconButton>
 				) : (
-					<div
-						onClick={() =>
-							setClientOpen(
-								!isClientOpen
-							)
-						}>
+					<div onClick={() => setClientOpen(!isClientOpen)}>
 						<p>
-							{
-								invoiceData
-									.client
-									.firstName
-							}{' '}
-							{
-								invoiceData
-									.client
-									.lastName
-							}
+							{invoiceData.client.firstName} {invoiceData.client.lastName}
 						</p>
-						<p>
-							{
-								invoiceData
-									.client
-									.email
-							}
-						</p>
+						<p>{invoiceData.client.email}</p>
 					</div>
 				)}
 			</div>
@@ -139,110 +108,81 @@ export default function InvoiceCreator() {
 				<h2>Products</h2>
 				<hr style={{ margin: 0 }} />
 				{invoiceData.products &&
-					invoiceData.products.map(
-						(
-							product: any,
-							index: number
-						) => {
-							return (
-								<ProductItem
-									onClick={() => {
-										dispatch(
-											{
-												type:
-													'REMOVE_PRODUCT',
-												payload: {
-													index
-												}
-											}
-										);
-									}}>
-									<p>
-										<span>
-											Name:{' '}
-										</span>
-										{
-											product.productName
-										}
-									</p>
-									{product.quantity >
-										0 && (
-										<p>
-											<span>
-												Qty.
-											</span>
-											{
-												product.quantity
-											}
-										</p>
-									)}
-									<p>
-										<span>
-											Price
-										</span>
-										{
-											product.price
-										}
-									</p>{' '}
-								</ProductItem>
-							);
-						}
-					)}
-
-				{productTransition.map(
-					({ item, key, props }) => {
-						if (item) {
-							return (
-								<Modal
-									key={
-										key
-									}>
-									<ProductPanel
-										style={
-											props
-										}
-										setProductOpen={
-											setProductOpen
-										}
-									/>
-								</Modal>
-							);
-						}
-						return null;
-					}
-				)}
-
-				{clientTransition.map(
-					({ item, key, props }) => {
+					invoiceData.products.map((product: any, index: number) => {
 						return (
-							item &&
-							!isProductOpen &&
-							!isViewer && (
-								<Modal
-									key={
-										key
-									}>
-									<animated.div
-										style={
-											props
-										}>
-										<ClientPanel
-											setClientOpen={
-												setClientOpen
-											}
-										/>
-									</animated.div>
-								</Modal>
-							)
+							<ProductItem
+								key={index}
+								onClick={() => {
+									dispatch({
+										type: 'REMOVE_PRODUCT',
+										payload: {
+											index
+										}
+									});
+								}}>
+								<p>
+									<span>Name: </span>
+									{product.productName}
+								</p>
+								{product.quantity > 0 && (
+									<p>
+										<span>Qty.</span>
+										{product.quantity}
+									</p>
+								)}
+								<p>
+									<span>Price</span>
+									{product.price}
+								</p>{' '}
+							</ProductItem>
+						);
+					})}
+
+				{productTransition.map(({ item, key, props }) => {
+					if (item) {
+						return (
+							<Modal key={key}>
+								<animated.div style={props}>
+									<ProductPanel setProductOpen={setProductOpen} />
+								</animated.div>
+							</Modal>
 						);
 					}
-				)}
+					return null;
+				})}
+				{viewerTransition.map(({ item, key, props }) => {
+					if (item) {
+						return (
+							<Modal key={key}>
+								<animated.div style={props}>
+									<CreatePdf
+										setViewerOpen={setisViewerOpen}
+										data={invoiceData}
+									/>
+								</animated.div>
+							</Modal>
+						);
+					}
+					return null;
+				})}
+
+				{clientTransition.map(({ item, key, props }) => {
+					return (
+						item &&
+						!isProductOpen &&
+						!isViewer && (
+							<Modal key={key}>
+								<animated.div style={props}>
+									<ClientPanel setClientOpen={setClientOpen} />
+								</animated.div>
+							</Modal>
+						)
+					);
+				})}
 				<IconButton
 					className='panel-actions'
 					onClick={() => {
-						setProductOpen(
-							!isProductOpen
-						);
+						setProductOpen(!isProductOpen);
 					}}>
 					<AddCircle />
 					<p>Add Product</p>
@@ -253,29 +193,13 @@ export default function InvoiceCreator() {
 				<h2>Details</h2>
 				<hr />
 				<h4>Tax: {converToCurrency(tax)} $</h4>
-				<h3>
-					Total:{' '}
-					{converToCurrency(
-						tax + totalCost
-					)}{' '}
-					$
-				</h3>
+				<h3>Total: {converToCurrency(tax + totalCost)} $</h3>
 				<div className='invoice-actions'>
-					<Button className='success'>
-						Save
+					<Button className='success'>Save</Button>
+					<Button className='success' onClick={handleShowViewer}>
+						Download PDF
 					</Button>
-					<Button
-						className='success'
-						onClick={
-							handleShowViewer
-						}>
-						Save PDF
-					</Button>
-					<Button
-						className='success'
-						onClick={
-							handleSendClient
-						}>
+					<Button className='success' onClick={handleSendClient}>
 						Send
 					</Button>
 				</div>
