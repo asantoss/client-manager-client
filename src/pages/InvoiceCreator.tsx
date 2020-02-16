@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
-import ClientInformation from '../components/Forms/ClientInformation';
 import { IconButton } from '@material-ui/core';
 import ProductPanel from '../components/Forms/ProductPanel';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddCircle } from '@material-ui/icons';
 import { useLocation } from 'react-router-dom';
 import { useTransition } from 'react-spring';
-import { MyDocument } from '../components/createPdf';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
 import ClientPanel from '../components/Forms/ClientPanel';
 import { animated } from 'react-spring';
@@ -19,21 +17,21 @@ export default function InvoiceCreator() {
 		from: { marginTop: 200 },
 		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 500 }
+		config: { duration: 200 }
 	});
-	const viewerTransition = useTransition(isViewer, null, {
-		from: { marginTop: 200, height: 0 },
-		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 500 }
-	});
+	// const viewerTransition = useTransition(isViewer, null, {
+	// 	from: { marginTop: 200, height: 0 },
+	// 	enter: { marginTop: 0 },
+	// 	leave: { opacity: 0, marginTop: 200, display: 'none' },
+	// 	config: { duration: 200 }
+	// });
 
 	const [isClientOpen, setClientOpen] = useState(false);
 	const clientTransition = useTransition(isClientOpen, null, {
 		from: { marginTop: 200 },
 		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 500 }
+		config: { duration: 200 }
 	});
 	const invoiceData = useSelector((state: any) => state.invoice);
 	const { state } = useLocation();
@@ -62,7 +60,20 @@ export default function InvoiceCreator() {
 		0
 	);
 	const tax = totalCost * 0.07;
-
+	const handleSendClient = () => {
+		fetch('/api/email', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				Accept:
+					'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ invoiceData })
+		})
+			.then(res => res.json())
+			.then(console.log);
+	};
 	return (
 		<InvoiceCreatorContainer>
 			<div className='invoice-panel'>
@@ -95,7 +106,12 @@ export default function InvoiceCreator() {
 						</p>
 					</IconButton>
 				) : (
-					<>
+					<div
+						onClick={() =>
+							setClientOpen(
+								!isClientOpen
+							)
+						}>
 						<p>
 							{
 								invoiceData
@@ -115,7 +131,7 @@ export default function InvoiceCreator() {
 									.email
 							}
 						</p>
-					</>
+					</div>
 				)}
 			</div>
 			<div className='invoice-panel'>
@@ -196,35 +212,6 @@ export default function InvoiceCreator() {
 					}
 				)}
 
-				{viewerTransition.map(
-					({ item, key, props }) => {
-						//@ts-ignore
-						return (
-							item &&
-							!isProductOpen && (
-								<Modal
-									key={
-										key
-									}>
-									<animated.div
-										style={
-											props
-										}>
-										<MyDocument
-											setIsViewerOpen={
-												setisViewerOpen
-											}
-											invoiceData={
-												invoiceData
-											}
-										/>
-									</animated.div>
-								</Modal>
-							)
-						);
-					}
-				)}
-
 				{clientTransition.map(
 					({ item, key, props }) => {
 						return (
@@ -287,7 +274,7 @@ export default function InvoiceCreator() {
 					<Button
 						className='success'
 						onClick={
-							handleShowViewer
+							handleSendClient
 						}>
 						Send
 					</Button>

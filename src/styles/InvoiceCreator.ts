@@ -7,7 +7,6 @@ export const InvoiceCreatorContainer = styled.div`
 	justify-content: space-evenly;
 	background-color: ${({ theme }) => theme.colors.background};
 	color: white;
-
 	hr {
 		width: 100%;
 		border-color: ${({ theme }) => theme.colors.background};
@@ -15,9 +14,6 @@ export const InvoiceCreatorContainer = styled.div`
 	.panel-actions {
 		font-size: 0.8em;
 		color: ${({ theme }) => theme.colors.primary};
-	}
-	& > div {
-		width: 100%;
 	}
 	.product {
 		background: rgba(0, 0, 0, 0.8);

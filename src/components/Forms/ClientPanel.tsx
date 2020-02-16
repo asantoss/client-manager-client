@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Button, MainActions, ClientPanelStyled } from '../../styles';
 import { Client } from '../../types/Invoice';
 import { AppState } from '../../reducers/';

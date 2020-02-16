@@ -42,9 +42,10 @@ export const ClientPanelStyled = styled.div`
 	display: flex;
 	flex-direction: column;
 	overflow-x: hidden;
+	margin: 1em;
 	align-items: center;
+	height: 100vh;
 	background-color: ${props => props.theme.colors.foreground};
-	height: 60vh;
 	label {
 		padding-left: 1em;
 	}
