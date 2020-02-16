@@ -24,7 +24,9 @@ body {
   font-family: 'Hind', sans-serif;
   max-width: 550px;
   margin: 70px auto; 
-  overflow: hidden;
+  @media only screen and (min-width: 700px) {
+	  overflow: hidden;
+  }
 }
 
 
@@ -78,10 +80,13 @@ export const SignInForm = styled.form`
 export const ModalStyled = styled.div`
 	z-index: 5;
 	width: 100vw;
+	height: 100vh;
 	margin-bottom: 56px;
+	background-color: ${props => props.theme.colors.background};
 	position: absolute;
 	@media (min-width: 700px) {
 		width: 550px;
+		height: 60vh;
 	}
 `;
 

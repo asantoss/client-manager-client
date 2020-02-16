@@ -6,9 +6,9 @@ export const ProductForm = styled.form`
 	justify-content: space-evenly;
 	flex-direction: column;
 	width: 100%;
+	height: 100%;
 	flex-wrap: wrap;
 	margin: 0 1em;
-	height: 60vh;
 	[name='price'],
 	[name='quantity'] {
 		width: 50px;
