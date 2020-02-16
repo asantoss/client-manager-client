@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { useFormik } from 'formik';
 import {
 	TextField,
@@ -15,10 +15,10 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { SignInForm, Button } from '../../styles';
 
-export default function SignIn() {
+const SignIn: React.FC<{ redirect: string }> = ({ redirect }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const [isPasswordShown, setPassShowed] = useState(false);
+	const [isPasswordShown, setPassShowed] = React.useState(false);
 	const [handleLogin] = useLazyQuery(LOGIN, {
 		onCompleted: data => {
 			if (data.login) {
@@ -26,7 +26,7 @@ export default function SignIn() {
 					type: 'LOGIN',
 					payload: { ...data.login }
 				});
-				history.push('/invoice/creator');
+				history.push(redirect);
 			}
 		}
 	});
@@ -57,11 +57,7 @@ export default function SignIn() {
 			/>
 			<TextField
 				variant='outlined'
-				type={
-					isPasswordShown
-						? 'text'
-						: 'password'
-				}
+				type={isPasswordShown ? 'text' : 'password'}
 				name='password'
 				label='Password'
 				onChange={formik.handleChange}
@@ -71,14 +67,8 @@ export default function SignIn() {
 						<InputAdornment position='end'>
 							<IconButton
 								aria-label='toggle password visibility'
-								onClick={
-									handleShowPassword
-								}>
-								{isPasswordShown ? (
-									<Visibility />
-								) : (
-									<VisibilityOff />
-								)}
+								onClick={handleShowPassword}>
+								{isPasswordShown ? <Visibility /> : <VisibilityOff />}
 							</IconButton>
 						</InputAdornment>
 					)
@@ -90,4 +80,6 @@ export default function SignIn() {
 			</Button>
 		</SignInForm>
 	);
-}
+};
+
+export default SignIn;

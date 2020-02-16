@@ -54,15 +54,11 @@ function App() {
 	const user: user = useSelector((state: any) => state.user);
 	const history = useHistory();
 	const location = useLocation();
-	const transitions = useTransition(
-		location,
-		location => location.pathname,
-		{
-			from: { opacity: 0 },
-			enter: { opacity: 1 },
-			leave: { display: 'none' }
-		}
-	);
+	const transitions = useTransition(location, location => location.pathname, {
+		from: { opacity: 0 },
+		enter: { opacity: 1 },
+		leave: { display: 'none' }
+	});
 
 	useEffect(() => {
 		if (!user.isLoggedIn) {
@@ -74,73 +70,54 @@ function App() {
 			<GlobalStyle />
 			<ApolloProvider client={client}>
 				<TopBar />
-				{transitions.map(
-					({ item, props, key }) => {
-						return (
-							<animated.div
-								key={
-									key
-								}
-								style={
-									props
-								}>
-								<Switch
-									location={
-										item
-									}>
-									{/* <Route
-										exact
-										path='/clients'
-										render={() => {
-											return (
-												<Layout>
-													<Clients />
-												</Layout>
-											);
-										}}
-									/> */}
-									<Route
-										exact
-										path='/invoice/creator'
-										render={() => {
-											return (
-												<Layout>
-													<InvoiceCreator />
-												</Layout>
-											);
-										}}
-									/>
-									<Route
-										exact
-										path='/invoices'
-										render={() => {
-											return (
-												<Layout>
-													<InvoiceCreator />
-												</Layout>
-											);
-										}}
-									/>
-									<Route
-										exact
-										path='/register'
-										component={
-											SignUp
-										}
-									/>
-									<Route
-										path='/login'
-										render={() => {
-											return (
-												<SignIn />
-											);
-										}}
-									/>
-								</Switch>
-							</animated.div>
-						);
-					}
-				)}
+				{transitions.map(({ item, props, key }) => {
+					return (
+						<animated.div key={key} style={props}>
+							<Switch location={item}>
+								<Route
+									exact
+									path='/clients'
+									render={() => {
+										return (
+											<Layout>
+												<Clients />
+											</Layout>
+										);
+									}}
+								/>
+								<Route
+									exact
+									path='/invoice/creator'
+									render={() => {
+										return (
+											<Layout>
+												<InvoiceCreator />
+											</Layout>
+										);
+									}}
+								/>
+								<Route
+									exact
+									path='/invoices'
+									render={() => {
+										return (
+											<Layout>
+												<InvoiceCreator />
+											</Layout>
+										);
+									}}
+								/>
+								<Route exact path='/register' component={SignUp} />
+								<Route
+									path='/login'
+									render={() => {
+										return <SignIn redirect='/clients' />;
+									}}
+								/>
+							</Switch>
+						</animated.div>
+					);
+				})}
 			</ApolloProvider>
 		</ThemeProvider>
 	);
