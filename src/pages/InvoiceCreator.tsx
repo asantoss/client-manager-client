@@ -9,19 +9,12 @@ import { useTransition } from 'react-spring';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
 import ClientPanel from '../components/Forms/ClientPanel';
 import { animated } from 'react-spring';
-import CreatePdf from '../components/createPdf';
+import { makePDf, converToCurrency } from '../utils/PDFcreate';
 
 export default function InvoiceCreator() {
 	const [isProductOpen, setProductOpen] = useState(false);
-	const [isViewer, setisViewerOpen] = useState(false);
 	const productTransition = useTransition(isProductOpen, null, {
 		from: { marginTop: 200 },
-		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 200 }
-	});
-	const viewerTransition = useTransition(isViewer, null, {
-		from: { marginTop: 200, height: 0 },
 		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
 		config: { duration: 200 }
@@ -37,11 +30,6 @@ export default function InvoiceCreator() {
 	const invoiceData = useSelector((state: any) => state.invoice);
 	const { state } = useLocation();
 	const dispatch = useDispatch();
-	const handleShowViewer = () => {
-		if (!isProductOpen) {
-			setisViewerOpen(!isViewer);
-		}
-	};
 	useEffect(() => {
 		if (state) {
 			dispatch({
@@ -57,35 +45,12 @@ export default function InvoiceCreator() {
 		}
 		return prev + acc.price;
 	}, 0);
-	const tax = totalCost * 0.07;
-	const handleSendClient = () => {
-		fetch('/api/email', {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				Accept: 'application/json, text/plain, */*',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ invoiceData })
-		})
-			.then(res => res.json())
-			.then(console.log);
-	};
+	// const tax = totalCost * 0.07;
 	return (
 		<InvoiceCreatorContainer>
 			<div className='invoice-panel'>
 				<h2>CUSTOMER</h2>
 				<hr />
-				{/* {isClientOpen && (
-					<ClientInformation
-						setClientOpen={
-							setClientOpen
-						}
-						isClientOpen={
-							isClientOpen
-						}
-					/>
-				)} */}
 				{!invoiceData.client.firstName && !invoiceData.client.email ? (
 					<IconButton
 						className='panel-actions'
@@ -150,27 +115,11 @@ export default function InvoiceCreator() {
 					}
 					return null;
 				})}
-				{viewerTransition.map(({ item, key, props }) => {
-					if (item) {
-						return (
-							<Modal key={key}>
-								<animated.div style={props}>
-									<CreatePdf
-										setViewerOpen={setisViewerOpen}
-										data={invoiceData}
-									/>
-								</animated.div>
-							</Modal>
-						);
-					}
-					return null;
-				})}
 
 				{clientTransition.map(({ item, key, props }) => {
 					return (
 						item &&
-						!isProductOpen &&
-						!isViewer && (
+						!isProductOpen && (
 							<Modal key={key}>
 								<animated.div style={props}>
 									<ClientPanel setClientOpen={setClientOpen} />
@@ -192,25 +141,14 @@ export default function InvoiceCreator() {
 				<hr />
 				<h2>Details</h2>
 				<hr />
-				<h4>Tax: {converToCurrency(tax)} $</h4>
-				<h3>Total: {converToCurrency(tax + totalCost)} $</h3>
+				<h3>Total: {converToCurrency(totalCost)} $</h3>
 				<div className='invoice-actions'>
 					<Button className='success'>Save</Button>
-					<Button className='success' onClick={handleShowViewer}>
+					<Button className='success' onClick={() => makePDf(invoiceData)}>
 						Download PDF
-					</Button>
-					<Button className='success' onClick={handleSendClient}>
-						Send
 					</Button>
 				</div>
 			</div>
 		</InvoiceCreatorContainer>
 	);
-}
-
-function converToCurrency(number: number): string {
-	return new Intl.NumberFormat('en-us', {
-		style: 'currency',
-		currency: 'USD'
-	}).format(number);
 }
