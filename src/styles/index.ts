@@ -24,9 +24,6 @@ body {
   font-family: 'Hind', sans-serif;
   max-width: 600px;
   margin: 70px auto; 
-  @media only screen and (min-width: 700px) {
-	  overflow: hidden;
-  }
 }
 
 
@@ -62,11 +59,12 @@ export const LayoutStyled = styled.div`
 `;
 
 export const SignInForm = styled.form`
+	color: white;
 	padding: 1em;
 	margin: auto;
 	max-width: 550px;
-	height: 50vh;
 	align-self: center;
+	border-radius: 8px;
 	background-color: ${props => props.theme.colors.foreground};
 	color: white;
 	display: flex;
@@ -75,17 +73,27 @@ export const SignInForm = styled.form`
 	& > button {
 		align-self: flex-end;
 	}
+	& > div {
+		margin: 1em;
+	}
+	input {
+		background: white;
+	}
+	a {
+		margin: 1em;
+		font-size: 1.5em;
+		color: ${({ theme }) => theme.colors.primary};
+	}
 `;
 
 export const ModalStyled = styled.div`
-	z-index: 5;
+	z-index: 2;
 	width: 100vw;
-	height: 100vh;
+	height: 100%;
 	margin-bottom: 56px;
 	background-color: ${props => props.theme.colors.background};
 	position: absolute;
 	@media (min-width: 700px) {
-		height: 60vh;
 		max-width: 600px;
 	}
 `;

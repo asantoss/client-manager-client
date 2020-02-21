@@ -4,14 +4,17 @@ import { IconButton } from '@material-ui/core';
 import ProductPanel from '../components/Forms/ProductPanel';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddCircle } from '@material-ui/icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useTransition } from 'react-spring';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
 import ClientPanel from '../components/Forms/ClientPanel';
 import { animated } from 'react-spring';
-import { makePDf, converToCurrency } from '../utils/PDFcreate';
+import { makePDf, converToCurrency, createDateInput } from '../utils/PDFcreate';
+import { useMutation } from '@apollo/react-hooks';
+import { CREATE_INVOICE } from '../apollo/constants';
 
 export default function InvoiceCreator() {
+	const [errorMessage, setErrorMessage] = useState('');
 	const [isProductOpen, setProductOpen] = useState(false);
 	const productTransition = useTransition(isProductOpen, null, {
 		from: { marginTop: 200 },
@@ -19,7 +22,8 @@ export default function InvoiceCreator() {
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
 		config: { duration: 200 }
 	});
-
+	const history = useHistory();
+	const [saveInvoice] = useMutation(CREATE_INVOICE);
 	const [isClientOpen, setClientOpen] = useState(false);
 	const clientTransition = useTransition(isClientOpen, null, {
 		from: { marginTop: 200 },
@@ -30,6 +34,7 @@ export default function InvoiceCreator() {
 	const invoiceData = useSelector((state: any) => state.invoice);
 	const { state } = useLocation();
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (state) {
 			dispatch({
@@ -45,9 +50,35 @@ export default function InvoiceCreator() {
 		}
 		return prev + acc.price;
 	}, 0);
+	const handleSaveInvoice = () => {
+		setErrorMessage('');
+		if (invoiceData.products.length === 0) {
+			return;
+		}
+		saveInvoice({
+			variables: {
+				ClientId: Number.parseInt(invoiceData.client.id),
+				products: [...invoiceData.products],
+				isPaid: false,
+				total: totalCost,
+				dateDue: invoiceData.dateDue
+			}
+		})
+			.then(res => {
+				debugger;
+				const { data } = res;
+				if (data.createInvoice.id) {
+					history.push('/invoices');
+				}
+			})
+			.catch(errors => {
+				setErrorMessage(errors.message);
+			});
+	};
 	// const tax = totalCost * 0.07;
 	return (
 		<InvoiceCreatorContainer>
+			<h3>{errorMessage}</h3>
 			<div className='invoice-panel'>
 				<h2>CUSTOMER</h2>
 				<hr />
@@ -141,9 +172,23 @@ export default function InvoiceCreator() {
 				<hr />
 				<h2>Details</h2>
 				<hr />
+				<h3>
+					Due Date:{' '}
+					<input
+						type='date'
+						name='dueDate'
+						min={createDateInput()}
+						value={invoiceData.dateDue}
+						onChange={e => {
+							dispatch({ type: 'SET_DUE_DATE', payload: e.target.value });
+						}}
+					/>
+				</h3>
 				<h3>Total: {converToCurrency(totalCost)} $</h3>
 				<div className='invoice-actions'>
-					<Button className='success'>Save</Button>
+					<Button className='success' onClick={handleSaveInvoice}>
+						Save
+					</Button>
 					<Button className='success' onClick={() => makePDf(invoiceData)}>
 						Download PDF
 					</Button>

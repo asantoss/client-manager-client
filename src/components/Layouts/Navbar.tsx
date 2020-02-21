@@ -8,7 +8,7 @@ function Navbar() {
 	// const [isOpen, setOpen] = useState(false);
 	return (
 		<Bottombar>
-			<NavLink to='/about' activeClassName='current'>
+			<NavLink to='/dashboard' activeClassName='current'>
 				<IconButton edge='start' aria-label='open drawer' color='inherit'>
 					<Menu />
 				</IconButton>

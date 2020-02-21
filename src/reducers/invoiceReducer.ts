@@ -1,6 +1,11 @@
 import InvoiceType from '../types/Invoice.d';
-
+import { createDateInput } from '../utils/PDFcreate';
+import { calculateTotal } from '../utils/parseInvoices';
 const initialState: InvoiceType = {
+	id: '',
+	isPaid: false,
+	total: 0,
+	dateDue: createDateInput(),
 	client: {
 		id: 0,
 		firstName: '',
@@ -28,7 +33,8 @@ export default (state = initialState, action: any) => {
 		case 'ADD_PRODUCT':
 			return {
 				...state,
-				products: [...state.products, payload]
+				products: [...state.products, payload],
+				total: calculateTotal([...state.products, payload])
 			};
 		case 'REMOVE_PRODUCT':
 			return {
@@ -37,6 +43,11 @@ export default (state = initialState, action: any) => {
 					...state.products.slice(0, payload.index),
 					...state.products.slice(payload.index + 1)
 				]
+			};
+		case 'SET_DUE_DATE':
+			return {
+				...state,
+				dateDue: payload
 			};
 		case 'SET_CLIENT':
 			return {
@@ -47,6 +58,10 @@ export default (state = initialState, action: any) => {
 			return {
 				...state,
 				company: { ...payload }
+			};
+		case 'LOAD_INVOICE':
+			return {
+				...payload
 			};
 		default:
 			return state;

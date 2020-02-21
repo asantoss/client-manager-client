@@ -1,4 +1,5 @@
 import Client from '../types/Invoice';
+import InvoiceType from '../types/Invoice';
 
 const initialState: AuthState = {
 	isLoggedIn: false,
@@ -6,7 +7,8 @@ const initialState: AuthState = {
 	id: 0,
 	firstName: '',
 	lastName: '',
-	clients: []
+	clients: [],
+	invoices: []
 };
 
 export interface AuthState {
@@ -16,6 +18,7 @@ export interface AuthState {
 	firstName: string;
 	lastName: string;
 	clients: [];
+	invoices: InvoiceType[];
 }
 
 export default (state: AuthState = initialState, action: any) => {
@@ -23,13 +26,18 @@ export default (state: AuthState = initialState, action: any) => {
 	switch (type) {
 		case 'LOGIN':
 			return {
-				...initialState,
+				...state,
 				isLoggedIn: true,
 				...payload
 			};
 		case 'LOGOUT':
 			return {
 				...initialState
+			};
+		case 'SET_INVOICES':
+			return {
+				...state,
+				invoices: payload
 			};
 		default:
 			return state;

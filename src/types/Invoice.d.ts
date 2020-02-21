@@ -16,15 +16,19 @@ export interface Client {
 }
 export interface Company {
 	companyName: string;
-	address: string;
-	phoneNumber: string;
-	city: string;
-	zipCode: string;
+	address?: string;
+	phoneNumber?: string;
+	city?: string;
+	zipCode?: string;
 	email: string;
 }
 
 export default interface InvoiceType {
+	id: string;
+	isPaid: Boolean;
+	dateDue: string;
 	client: Client;
-	company: Company;
+	company?: Company;
 	products: Product[];
+	total: number;
 }

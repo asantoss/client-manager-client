@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import {
 	TextField,
 	InputLabel,
-	Button,
 	InputAdornment,
 	IconButton
 } from '@material-ui/core';
@@ -13,7 +12,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { REGISTER } from '../../apollo/constants';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { SignUpFormContainer } from '../../styles';
+import { SignUpFormContainer, Button } from '../../styles';
 
 const SignUpSchema = Yup.object().shape({
 	firstName: Yup.string()
@@ -29,14 +28,8 @@ const SignUpSchema = Yup.object().shape({
 		.required('Required'),
 	password: Yup.string()
 		.required('No password provided.')
-		.min(
-			8,
-			'Password is too short - should be 8 chars minimum.'
-		)
-		.matches(
-			/[a-zA-Z]/,
-			'Password can only contain Latin letters.'
-		)
+		.min(8, 'Password is too short - should be 8 chars minimum.')
+		.matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
 });
 
 export default function SignUp() {
@@ -84,19 +77,12 @@ export default function SignUp() {
 				variant='outlined'
 				onChange={formik.handleChange}
 				value={formik.values.email}
-				helperText={
-					formik.errors.email &&
-					formik.errors.email
-				}
+				helperText={formik.errors.email && formik.errors.email}
 				error={!!formik.errors.email}
 			/>
 			<TextField
 				variant='outlined'
-				type={
-					isPasswordShown
-						? 'text'
-						: 'password'
-				}
+				type={isPasswordShown ? 'text' : 'password'}
 				autoComplete='new-password'
 				required
 				name='password'
@@ -110,14 +96,8 @@ export default function SignUp() {
 						<InputAdornment position='end'>
 							<IconButton
 								aria-label='toggle password visibility'
-								onClick={
-									handleShowPassword
-								}>
-								{isPasswordShown ? (
-									<Visibility />
-								) : (
-									<VisibilityOff />
-								)}
+								onClick={handleShowPassword}>
+								{isPasswordShown ? <Visibility /> : <VisibilityOff />}
 							</IconButton>
 						</InputAdornment>
 					)
@@ -129,10 +109,7 @@ export default function SignUp() {
 				variant='outlined'
 				onChange={formik.handleChange}
 				value={formik.values.firstName}
-				helperText={
-					formik.errors.firstName &&
-					formik.errors.firstName
-				}
+				helperText={formik.errors.firstName && formik.errors.firstName}
 				error={!!formik.errors.firstName}
 			/>
 			<TextField
@@ -141,23 +118,24 @@ export default function SignUp() {
 				variant='outlined'
 				onChange={formik.handleChange}
 				value={formik.values.lastName}
-				helperText={
-					formik.errors.lastName &&
-					formik.errors.lastName
-				}
+				helperText={formik.errors.lastName && formik.errors.lastName}
 				error={!!formik.errors.lastName}
 			/>
 
+			<TextField
+				name='companyName'
+				label='Company Name'
+				variant='outlined'
+				onChange={formik.handleChange}
+				value={formik.values.companyName}
+			/>
 			<TextField
 				name='phoneNumber'
 				label='Phone Number'
 				variant='outlined'
 				onChange={formik.handleChange}
 				value={formik.values.phoneNumber}
-				helperText={
-					formik.errors.phoneNumber &&
-					formik.errors.phoneNumber
-				}
+				helperText={formik.errors.phoneNumber && formik.errors.phoneNumber}
 				error={!!formik.errors.phoneNumber}
 			/>
 
@@ -167,10 +145,7 @@ export default function SignUp() {
 				variant='outlined'
 				onChange={formik.handleChange}
 				value={formik.values.address}
-				helperText={
-					formik.errors.address &&
-					formik.errors.address
-				}
+				helperText={formik.errors.address && formik.errors.address}
 				error={!!formik.errors.address}
 			/>
 			<TextField
@@ -180,19 +155,7 @@ export default function SignUp() {
 				onChange={formik.handleChange}
 				value={formik.values.city}
 			/>
-			<TextField
-				name='companyName'
-				label='Company Name'
-				variant='outlined'
-				onChange={formik.handleChange}
-				value={formik.values.companyName}
-			/>
-			<Button
-				variant='contained'
-				color='primary'
-				type='submit'>
-				Submit
-			</Button>
+			<Button>Submit</Button>
 		</SignUpFormContainer>
 	);
 }

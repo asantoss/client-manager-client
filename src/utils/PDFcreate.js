@@ -20,7 +20,10 @@ export const makePDf = data => {
 
 	doc.setFontStyle('normal');
 	doc.setFontSize(16);
-	doc.text(getFormattedDate(), rightColumn, 40);
+	doc.text('Created Date:', rightColumn, 40);
+	doc.text(getFormattedDate(createDateInput()), rightColumn, 45);
+	doc.text('Due Date:', rightColumn, 50);
+	doc.text(getFormattedDate(data.dueDate), rightColumn, 55);
 
 	doc.line(0, 50, 210, 50);
 	doc.text(`${data.client.firstName} ${data.client.lastName}`, leftColumn, 60);
@@ -59,8 +62,8 @@ export function converToCurrency(number) {
 	}).format(number);
 }
 
-export function getFormattedDate() {
-	const date = new Date();
+export function getFormattedDate(input) {
+	let date = new Date(input);
 	let year = date.getFullYear();
 	let month = (1 + date.getMonth()).toString().padStart(2, '0');
 	let day = date
@@ -69,4 +72,16 @@ export function getFormattedDate() {
 		.padStart(2, '0');
 
 	return month + '/' + day + '/' + year;
+}
+
+export function createDateInput() {
+	let date = new Date();
+	let year = date.getFullYear();
+	let month = (1 + date.getMonth()).toString().padStart(2, '0');
+	let day = date
+		.getDate()
+		.toString()
+		.padStart(2, '0');
+
+	return year + '-' + month + '-' + day;
 }

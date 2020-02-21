@@ -31,7 +31,6 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 		},
 		onSubmit: values => {
 			const { productName, description, price, quantity } = values;
-			debugger;
 			dispatch({
 				type: 'ADD_PRODUCT',
 				payload: { productName, description, price, quantity }

@@ -7,7 +7,6 @@ import {
 	IconButton,
 	InputAdornment
 } from '@material-ui/core';
-
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { LOGIN } from '../../apollo/constants';

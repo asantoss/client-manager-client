@@ -6,6 +6,10 @@ export const LOGIN = gql`
 			id
 			firstName
 			lastName
+			email
+			address
+			phoneNumber
+			companyName
 			clients {
 				id
 				firstName
@@ -34,6 +38,18 @@ export const GET_CLIENTS = gql`
 				address
 				city
 				zipCode
+				invoices {
+					id
+					dateDue
+					total
+					isPaid
+					products {
+						productName
+						description
+						quantity
+						price
+					}
+				}
 			}
 		}
 	}
@@ -64,5 +80,44 @@ export const REGISTER = gql`
 			lastName
 			id
 		}
+	}
+`;
+
+export const CREATE_INVOICE = gql`
+	mutation createInvoice(
+		$ClientId: Int!
+		$products: [ProductsInput]
+		$isPaid: Boolean
+		$total: Int
+		$dateDue: String
+	) {
+		createInvoice(
+			ClientId: $ClientId
+			products: $products
+			isPaid: $isPaid
+			total: $total
+			dateDue: $dateDue
+		) {
+			client {
+				firstName
+				lastName
+			}
+			products {
+				productName
+				price
+				quantity
+			}
+			id
+			total
+			isPaid
+			total
+			dateDue
+		}
+	}
+`;
+
+export const REMOVE_INVOICE = gql`
+	mutation removeInvoice($id: Int) {
+		removeInvoice(id: $id)
 	}
 `;
