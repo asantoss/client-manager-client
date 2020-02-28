@@ -4,6 +4,12 @@ export const ClientContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.colors.background};
+	input {
+		height: 4em;
+		width: 80%;
+		font-size: 1em;
+		margin: 0.5em auto;
+	}
 `;
 
 export const ClientStyled = styled.div`
@@ -66,7 +72,7 @@ export const ClientPanelStyled = styled.div`
 		align-items: center;
 		margin: 0.2em;
 		width: 100%;
-		border-bottom: 0.2em solid ${({ theme }) => theme.colors.background};
+		/* border-bottom: 0.2em solid ${({ theme }) => theme.colors.background}; */
 		& > * {
 			margin: 0.1em 0;
 		}
@@ -75,13 +81,19 @@ export const ClientPanelStyled = styled.div`
 
 export const ClientInformationForm = styled.form`
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	width: 90%;
+
 	overflow-x: scroll;
 	label {
 		text-transform: capitalize;
 	}
 	& > .client_input {
-		margin-bottom: 0.5em;
+		background-color: white;
+		margin: 0.5em;
+	}
+	& > button {
+		background-color: ${({ theme }) => theme.colors.primary};
 	}
 `;

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Switch } from '@material-ui/core';
 import ProductPanel from '../components/Forms/ProductPanel';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddCircle } from '@material-ui/icons';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 import { useTransition } from 'react-spring';
 import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
 import ClientPanel from '../components/Forms/ClientPanel';
 import { animated } from 'react-spring';
 import { makePDf, converToCurrency, createDateInput } from '../utils/PDFcreate';
 import { useMutation } from '@apollo/react-hooks';
-import { CREATE_INVOICE } from '../apollo/constants';
+import { CREATE_INVOICE, UPDATE_INVOICE } from '../apollo/constants';
 
 export default function InvoiceCreator() {
 	const [errorMessage, setErrorMessage] = useState('');
@@ -23,7 +23,10 @@ export default function InvoiceCreator() {
 		config: { duration: 200 }
 	});
 	const history = useHistory();
+
 	const [saveInvoice] = useMutation(CREATE_INVOICE);
+	const [updateInvoice] = useMutation(UPDATE_INVOICE);
+	const { type } = useParams();
 	const [isClientOpen, setClientOpen] = useState(false);
 	const clientTransition = useTransition(isClientOpen, null, {
 		from: { marginTop: 200 },
@@ -55,25 +58,52 @@ export default function InvoiceCreator() {
 		if (invoiceData.products.length === 0) {
 			return;
 		}
-		saveInvoice({
-			variables: {
-				ClientId: Number.parseInt(invoiceData.client.id),
-				products: [...invoiceData.products],
-				isPaid: false,
-				total: totalCost,
-				dateDue: invoiceData.dateDue
-			}
-		})
-			.then(res => {
-				debugger;
-				const { data } = res;
-				if (data.createInvoice.id) {
-					history.push('/invoices');
-				}
-			})
-			.catch(errors => {
-				setErrorMessage(errors.message);
-			});
+		switch (type) {
+			case 'creator':
+				return saveInvoice({
+					variables: {
+						ClientId: Number.parseInt(invoiceData.client.id),
+						products: [...invoiceData.products],
+						isPaid: invoiceData.isPaid,
+						total: totalCost,
+						dateDue: invoiceData.dateDue
+					}
+				})
+					.then(res => {
+						const { data } = res;
+						if (data.createInvoice.id) {
+							dispatch({ type: 'RESET' });
+							history.push('/invoices');
+						}
+					})
+					.catch(errors => {
+						setErrorMessage(errors.message);
+					});
+			case 'editor':
+				return updateInvoice({
+					variables: {
+						id: Number.parseInt(invoiceData.id),
+						ClientId: Number.parseInt(invoiceData.client.id),
+						products: [...invoiceData.products],
+						isPaid: invoiceData.isPaid,
+						total: totalCost,
+						dateDue: invoiceData.dateDue
+					}
+				})
+					.then(res => {
+						const { data } = res;
+						if (data.updateInvoice.id) {
+							dispatch({ type: 'RESET' });
+							history.push('/invoices');
+						}
+					})
+					.catch(errors => {
+						setErrorMessage(errors.message);
+					});
+
+			default:
+				return;
+		}
 	};
 	// const tax = totalCost * 0.07;
 	return (
@@ -172,6 +202,7 @@ export default function InvoiceCreator() {
 				<hr />
 				<h2>Details</h2>
 				<hr />
+
 				<h3>
 					Due Date:{' '}
 					<input
@@ -182,6 +213,19 @@ export default function InvoiceCreator() {
 						onChange={e => {
 							dispatch({ type: 'SET_DUE_DATE', payload: e.target.value });
 						}}
+					/>
+				</h3>
+				<h3>
+					Paid
+					<Switch
+						checked={invoiceData.isPaid}
+						onChange={() =>
+							dispatch({
+								type: 'MARK_PAID',
+								payload: !invoiceData.isPaid
+							})
+						}
+						inputProps={{ 'aria-label': 'Mark as paid' }}
 					/>
 				</h3>
 				<h3>Total: {converToCurrency(totalCost)} $</h3>

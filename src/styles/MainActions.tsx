@@ -9,6 +9,8 @@ const Container = styled.div`
 	justify-content: space-between;
 	padding: 1em;
 	max-width: 600px;
+	width: 100%;
+	border-radius: 10px;
 `;
 
 interface MainActionProps {

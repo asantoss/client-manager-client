@@ -3,70 +3,72 @@ import { DashboardContainer } from '.';
 import InvoiceType from '../../types/Invoice';
 import moment from 'moment';
 import { IconButton } from '@material-ui/core';
-import { Delete, ViewAgenda, Edit, Done, Close } from '@material-ui/icons';
+import { Delete, Edit, Done, Close, CloudDownload } from '@material-ui/icons';
+import { makePDf } from '../../utils/PDFcreate';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { REMOVE_INVOICE, GET_CLIENTS } from '../../apollo/constants';
 import { parseInvoices } from '../../utils/parseInvoices';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 export interface Props {
 	children?: React.ReactNode;
-}
-
-interface State {
-	overDue: InvoiceType[];
-	overDueTotal: number;
-	toBePaid: InvoiceType[];
-	toBePaidTotal: number;
-	invoices: InvoiceType[];
 }
 const today = new Date();
 
 const Dashboard: React.FC<Props> = () => {
 	const { loading: queryLoading, data } = useQuery(GET_CLIENTS);
 	const [removeInvoice] = useMutation(REMOVE_INVOICE);
-	const [state, setState] = React.useState<State>({
-		overDue: [],
-		overDueTotal: 0,
-		toBePaid: [],
-		toBePaidTotal: 0,
-		invoices: []
-	});
+
+	const [overDue, setOverDue] = React.useState<InvoiceType[]>([]);
+	const [toBePaid, setToBePaid] = React.useState<InvoiceType[]>([]);
+	const [invoices, setInvoices] = React.useState<InvoiceType[]>([]);
+	const dispatch = useDispatch();
+	const history = useHistory();
 	React.useEffect(() => {
 		if (data) {
-			const invoices = parseInvoices(data.getMe);
-			setState(state => ({ ...state, invoices }));
-			consumeInvoiceData(invoices, setState);
+			const [
+				invoicesData,
+				overDueData,
+				toBePaidData
+			]: InvoiceType[][] = parseInvoices(data.getMe);
+			setOverDue(s => [...overDueData]);
+			setInvoices(s => [...invoicesData]);
+			setToBePaid(s => [...toBePaidData]);
 		}
 	}, [data]);
-	const handleAction = async ([action, id, index]: [
-		string,
-		string,
-		number
-	]) => {
-		if (action === 'delete') {
-			const { data } = await removeInvoice({
-				variables: {
-					id: Number(id)
-				}
-			});
-			if (data.removeInvoice === 'Sucess') {
-				consumeInvoiceData(
-					[
-						...state.invoices.slice(0, index),
-						...state.invoices.slice(index + 1)
-					],
-					setState
-				);
+	const handleView = async (invoice: InvoiceType) => {
+		dispatch({ type: 'LOAD_INVOICE', payload: invoice });
+		history.push('/invoice/editor');
+	};
+	const handleDownload = (invoice: InvoiceType) => {
+		return makePDf(invoice);
+	};
+
+	const handleDelete = async (id: string, index: number) => {
+		const { data } = await removeInvoice({
+			variables: {
+				id: Number(id)
 			}
+		});
+		if (data.removeInvoice === 'Sucess') {
+			if (moment(invoices[index].dateDue).isAfter(today.getDate())) {
+				setToBePaid(s => [...s.slice(0, index), ...s.slice(index + 1)]);
+			} else {
+				setOverDue(s => [...s.slice(0, index), ...s.slice(index + 1)]);
+			}
+			return setInvoices(s => [...s.slice(0, index), ...s.slice(index + 1)]);
 		}
 	};
 	if (queryLoading) {
 		return <p>Loading.....</p>;
 	}
+	let overDueTotal = overDue.reduce((acc, curr) => (acc += curr.total), 0);
+	let toBePaidTotal = toBePaid.reduce((acc, curr) => (acc += curr.total), 0);
 	return (
 		<DashboardContainer
-			overDueTotal={state.overDueTotal}
-			toBePaidTotal={state.toBePaidTotal}>
+			overDueTotal={overDueTotal}
+			toBePaidTotal={toBePaidTotal}>
 			<div className='dashboard__title'>
 				<h2>Invoices</h2>
 			</div>
@@ -74,15 +76,15 @@ const Dashboard: React.FC<Props> = () => {
 				<div className='dashboard__card--body'>
 					<h2>To be paid</h2>
 					<div>
-						<span>${state.toBePaidTotal}</span>
-						<span>{state.toBePaid.length} Invoices</span>
+						<span>${toBePaidTotal}</span>
+						<span>{toBePaid.length} Invoices</span>
 					</div>
 				</div>
 				<div className='dashboard__card--footer'>
 					<h2>Overdue</h2>
 					<div>
-						<span>${state.overDueTotal}</span>
-						<span>{state.overDue.length} Invoices</span>
+						<span>${overDueTotal}</span>
+						<span>{overDue.length} Invoices</span>
 					</div>
 				</div>
 			</div>
@@ -93,33 +95,38 @@ const Dashboard: React.FC<Props> = () => {
 					<h3>Date Due</h3>
 					<h3>Status</h3>
 				</div>
-				{!state.invoices.length && 'No invoices'}
-				{state.invoices.map((invoice, index) => {
+				{!invoices.length && 'No invoices'}
+				{invoices.map((invoice, index) => {
 					const { client, dateDue, isPaid, total, id } = invoice;
 					return (
 						<div className='dashboard__body--invoice'>
 							<div className='actions'>
-								<IconButton onClick={() => handleAction(['delete', id, index])}>
+								<IconButton onClick={() => handleDelete(id, index)}>
 									<Delete />
 								</IconButton>
 								<IconButton>
-									<ViewAgenda />
+									<CloudDownload onClick={() => handleDownload(invoice)} />
 								</IconButton>
-								<IconButton>
+								<IconButton onClick={() => handleView(invoice)}>
 									<Edit />
 								</IconButton>
+								{/* <IconButton onClick={() => handleMarkPaid(invoice, index)}>
+									<Check />
+								</IconButton> */}
 							</div>
-							<div className='invoice-clientName'>
-								{client.firstName} {client.lastName}
-							</div>
-							<div className='invoice-total'>{total}</div>
-							<div className='invoice-date'>{dateDue}</div>
-							<div className='invoice-status'>
-								{isPaid ? (
-									<Done style={{ color: 'green' }} />
-								) : (
-									<Close style={{ color: 'red' }} />
-								)}
+							<div>
+								<div className='invoice-clientName'>
+									{client.firstName} {client.lastName}
+								</div>
+								<div className='invoice-total'>{total}</div>
+								<div className='invoice-date'>{dateDue}</div>
+								<div className='invoice-status'>
+									{isPaid ? (
+										<Done style={{ color: 'green' }} />
+									) : (
+										<Close style={{ color: 'red' }} />
+									)}
+								</div>
 							</div>
 						</div>
 					);
@@ -131,22 +138,22 @@ const Dashboard: React.FC<Props> = () => {
 
 export default Dashboard;
 
-function consumeInvoiceData(invoices: InvoiceType[], callBack: Function) {
-	for (let i = 0; i < invoices.length; i++) {
-		const curr = invoices[i];
-		if (moment(curr.dateDue).isBefore(today.getDate())) {
-			callBack((state: State) => ({
-				...state,
-				overDue: [...state.overDue, curr],
-				overDueTotal: state.overDueTotal + curr.total
-			}));
-		}
-		if (moment(curr.dateDue).isAfter(today.getDate())) {
-			callBack((state: State) => ({
-				...state,
-				toBePaid: [...state.toBePaid, curr],
-				toBePaidTotal: state.toBePaidTotal + curr.total
-			}));
-		}
-	}
-}
+// function consumeInvoiceData(invoices: InvoiceType[], callBack: Function) {
+// 	for (let i = 0; i < invoices.length; i++) {
+// 		const curr = invoices[i];
+// 		if (moment(curr.dateDue).isBefore(today.getDate())) {
+// 			return callBack(state => ({
+// 				...state,
+// 				overDue: [...state.overDue, curr],
+// 				overDueTotal: state.overDueTotal + curr.total
+// 			}));
+// 		}
+// 		if (moment(curr.dateDue).isAfter(today.getDate())) {
+// 			return callBack(state => ({
+// 				...state,
+// 				toBePaid: [...state.toBePaid, curr],
+// 				toBePaidTotal: state.toBePaidTotal + curr.total
+// 			}));
+// 		}
+// 	}
+// }

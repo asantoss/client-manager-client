@@ -29,10 +29,8 @@ function App() {
 	const user: user = useSelector((state: any) => state.user);
 	const history = useHistory();
 	useEffect(() => {
-		if (process.env.NODE_ENV === 'production') {
-			if (!user.isLoggedIn) {
-				history.push('/login');
-			}
+		if (!user.isLoggedIn) {
+			history.push('/login');
 		}
 	}, [user.isLoggedIn, history]);
 	return (
@@ -43,7 +41,7 @@ function App() {
 				<Switch>
 					<Route
 						exact
-						path='/clients'
+						path='/'
 						render={() => {
 							return (
 								<Layout>
@@ -54,7 +52,7 @@ function App() {
 					/>
 					<Route
 						exact
-						path='/invoice/creator'
+						path='/invoice/:type'
 						render={() => {
 							return (
 								<Layout>
@@ -78,7 +76,7 @@ function App() {
 					<Route
 						path='/login'
 						render={() => {
-							return <SignIn redirect='/clients' />;
+							return <SignIn redirect='/' />;
 						}}
 					/>
 				</Switch>

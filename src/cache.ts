@@ -1,7 +1,7 @@
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({ addTypename: false });
 const link = new HttpLink({
 	uri: '/graphql',
 	credentials: 'same-origin'

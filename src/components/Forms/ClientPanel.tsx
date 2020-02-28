@@ -16,13 +16,14 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 	const dispatch = useDispatch();
 	const clients = useSelector((state: AppState) => state.user.clients);
 	const [newClient, setNewClient] = React.useState(false);
-	const localStorageClients = localStorage.getItem('clients');
 	React.useEffect(() => {
+		//@ts-ignore
+		const localStorageClients = JSON.parse(localStorage.getItem('clients'));
 		if (localStorageClients) {
-			setlocalClients((s: any) => [...JSON.parse(localStorageClients)]);
+			setlocalClients((s: any) => [...localStorageClients]);
 		}
 		return () => {};
-	}, [localStorageClients]);
+	}, []);
 	const handleSetClient = (client: Client) => {
 		dispatch({ type: 'SET_CLIENT', payload: client });
 		saveClientToLocalStorage(client);
@@ -36,16 +37,31 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 			/>
 			<div>
 				<Button onClick={() => setNewClient(!newClient)}>
-					Add New Customer
+					{!newClient ? 'Add New Customer' : 'Cancel'}
 				</Button>
 			</div>
 			{newClient ? (
 				<ClientInformation
 					isClientOpen={newClient}
-					setClientOpen={setNewClient}
+					setClientOpen={setClientOpen}
+					saveToLocal={saveClientToLocalStorage}
 				/>
 			) : (
 				<div className='client-list'>
+					<div style={{ borderBottom: '1px dotted black', color: 'White' }}>
+						<h5>Recently Used</h5>
+						{localClients.map(client => {
+							return (
+								<div
+									onClick={() => handleSetClient(client)}
+									className='client'
+									key={client.id?.toString()}>
+									<span>{`${client.firstName + client.lastName}`}</span>
+									<span>{client.email}</span>
+								</div>
+							);
+						})}
+					</div>
 					{clients &&
 						clients.map((client: Client) => {
 							return (
@@ -53,8 +69,8 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 									onClick={() => handleSetClient(client)}
 									className='client'
 									key={client.id?.toString()}>
-									<h4>{`${client.firstName + client.lastName}`}</h4>
-									<h5>{client.email}</h5>
+									<span>{`${client.firstName + client.lastName}`}</span>
+									<span>{client.email}</span>
 								</div>
 							);
 						})}
@@ -65,31 +81,31 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 };
 
 export default ClientPanel;
-
 function saveClientToLocalStorage(client: Client): void {
-	const localStorageClients = localStorage.getItem('clients');
-	let localStorageClientsParsed: Client[] | [] = [];
-	if (typeof localStorageClients === 'string') {
-		let localStorageClientsParsed = JSON.parse(localStorageClients);
-	}
-	const filteredClients = localStorageClientsParsed.filter(
-		(item: Client, index: number) => {
-			if (
-				item.firstName === client.firstName &&
-				item.email === client.email &&
-				item.lastName === client.lastName
-			) {
-				return true;
+	//@ts-ignore
+	const localStorageClients = JSON.parse(localStorage.getItem('clients'));
+	if (localStorageClients) {
+		const filteredClients = localStorageClients.filter(
+			(item: Client, index: number) => {
+				if (
+					item.firstName === client.firstName &&
+					item.email === client.email &&
+					item.lastName === client.lastName
+				) {
+					return true;
+				}
+				return false;
 			}
-			return false;
-		}
-	);
-	if (filteredClients.length > 0) {
-		return;
-	} else {
-		return localStorage.setItem(
-			'products',
-			JSON.stringify([...localStorageClientsParsed, client])
 		);
+		if (filteredClients.length > 0) {
+			return;
+		} else {
+			return localStorage.setItem(
+				'clients',
+				JSON.stringify([...localStorageClients, client])
+			);
+		}
+	} else {
+		return localStorage.setItem('clients', JSON.stringify([client]));
 	}
 }

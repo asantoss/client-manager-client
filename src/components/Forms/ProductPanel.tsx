@@ -33,7 +33,12 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 			const { productName, description, price, quantity } = values;
 			dispatch({
 				type: 'ADD_PRODUCT',
-				payload: { productName, description, price, quantity }
+				payload: {
+					productName,
+					description,
+					price,
+					quantity: quantity.toString()
+				}
 			});
 			saveProductToLocalStorage({ productName, description, price, quantity });
 			setProductOpen(false);

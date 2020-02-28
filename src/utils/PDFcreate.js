@@ -16,14 +16,14 @@ export const makePDf = data => {
 	doc.setFontSize(25);
 	doc.setFontStyle('bold');
 	// doc.text('Company Name', leftColumn, 30);
-	doc.text('Quote', rightColumn, 30);
+	doc.text('Quote', rightColumn, 20);
 
 	doc.setFontStyle('normal');
 	doc.setFontSize(16);
-	doc.text('Created Date:', rightColumn, 40);
-	doc.text(getFormattedDate(createDateInput()), rightColumn, 45);
-	doc.text('Due Date:', rightColumn, 50);
-	doc.text(getFormattedDate(data.dueDate), rightColumn, 55);
+	doc.text('Created Date:', rightColumn, 30);
+	doc.text(getFormattedDate(createDateInput()), rightColumn, 35);
+	doc.text('Due Date:', rightColumn, 40);
+	doc.text(getFormattedDate(data.dateDue), rightColumn, 45);
 
 	doc.line(0, 50, 210, 50);
 	doc.text(`${data.client.firstName} ${data.client.lastName}`, leftColumn, 60);

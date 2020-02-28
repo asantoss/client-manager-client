@@ -13,13 +13,14 @@ export const Bottombar = styled.nav`
 	min-height: 64px;
 	z-index: 3;
 	background-color: ${({ theme }) => theme.colors.foreground};
+
 	a {
-		color: ${({ theme }) => theme.colors.background};
+		color: ${({ theme }) => theme.colors.primary};
 	}
 	.current {
-		color: ${({ theme }) => theme.colors.primary};
+		opacity: 0.8;
 		& :hover {
-			opacity: 0.7;
+			opacity: 0.3;
 		}
 	}
 `;

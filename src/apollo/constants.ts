@@ -116,6 +116,41 @@ export const CREATE_INVOICE = gql`
 	}
 `;
 
+export const UPDATE_INVOICE = gql`
+	mutation updateInvoice(
+		$id: Int!
+		$ClientId: Int
+		$products: [ProductsInput]
+		$isPaid: Boolean
+		$total: Int
+		$dateDue: String
+	) {
+		updateInvoice(
+			id: $id
+			ClientId: $ClientId
+			products: $products
+			isPaid: $isPaid
+			total: $total
+			dateDue: $dateDue
+		) {
+			client {
+				firstName
+				lastName
+			}
+			products {
+				productName
+				price
+				quantity
+			}
+			id
+			total
+			isPaid
+			total
+			dateDue
+		}
+	}
+`;
+
 export const REMOVE_INVOICE = gql`
 	mutation removeInvoice($id: Int) {
 		removeInvoice(id: $id)

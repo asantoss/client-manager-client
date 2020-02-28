@@ -58,6 +58,9 @@ export const DashboardContainer = styled.div<Props>`
 			border: 0.5px solid rgba(0, 0, 0, 0.6);
 			margin: 0.5em 0;
 			font-size: 0.8em;
+			@media only screen and (max-width: 600px) {
+				flex-direction: column-reverse;
+			}
 		}
 		&--header {
 			display: flex;

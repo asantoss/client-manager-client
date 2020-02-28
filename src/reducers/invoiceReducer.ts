@@ -49,6 +49,11 @@ export default (state = initialState, action: any) => {
 				...state,
 				dateDue: payload
 			};
+		case 'MARK_PAID':
+			return {
+				...state,
+				isPaid: payload
+			};
 		case 'SET_CLIENT':
 			return {
 				...state,
@@ -62,6 +67,10 @@ export default (state = initialState, action: any) => {
 		case 'LOAD_INVOICE':
 			return {
 				...payload
+			};
+		case 'RESET':
+			return {
+				...initialState
 			};
 		default:
 			return state;

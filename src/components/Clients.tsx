@@ -1,33 +1,59 @@
-import React from 'react';
+import * as React from 'react';
 import { GET_CLIENTS } from '../apollo/constants';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import { Client as ClientType } from '../types/Invoice';
 import { ClientContainer } from '../styles/Clients';
 
 import Client from './Client';
 
 export default function Clients() {
-	const { loading, error, data } = useQuery(GET_CLIENTS);
+	const [clients, setClients] = React.useState<ClientType[]>([]);
+	let allClients = React.useRef<ClientType[]>([]);
+	const [loadClients, { loading, error, data }] = useLazyQuery(GET_CLIENTS);
+	React.useEffect(() => {
+		loadClients();
+		if (data) {
+			if (data.getMe.clients) {
+				setClients(s => [...data.getMe.clients]);
+				allClients.current = [...data.getMe.clients];
+			}
+		}
+	}, [loadClients, data]);
 	if (loading) return <p>loading....</p>;
 	if (error) return <p>Had some trouble making this request</p>;
-	if (data && data.getMe) {
-		const { clients } = data.getMe;
-		return (
-			<ClientContainer>
-				{clients.map((client: ClientType) => {
+	const handleSearch = (e: any) => {
+		e.preventDefault();
+		const searchParam = e.target.value.toLowerCase();
+		if (searchParam) {
+			return setClients(s =>
+				s.filter(client => {
+					const foundInFirstName =
+						client.firstName.toLowerCase().indexOf(searchParam) > -1;
+					const foundInLastName =
+						client.lastName.toLowerCase().indexOf(searchParam) > -1;
+					const foundInEmail =
+						client.email.toLowerCase().indexOf(searchParam) > -1;
+					return foundInFirstName || foundInLastName || foundInEmail;
+				})
+			);
+		} else {
+			return setClients(s => [...allClients.current]);
+		}
+	};
+	return (
+		<ClientContainer>
+			<input placeholder='Search' type='text' onChange={handleSearch} />
+			{!!clients.length ? (
+				clients.map((client: ClientType) => {
 					return (
-						<div
-							key={client.id?.toString()}>
-							<Client
-								client={
-									client
-								}
-							/>
+						<div key={client.id?.toString()}>
+							<Client client={client} />
 						</div>
 					);
-				})}
-			</ClientContainer>
-		);
-	}
-	return <p>Loading...</p>;
+				})
+			) : (
+				<p>No Clients</p>
+			)}
+		</ClientContainer>
+	);
 }

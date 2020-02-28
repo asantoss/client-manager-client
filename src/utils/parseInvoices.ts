@@ -1,4 +1,5 @@
 import InvoiceType, { Product } from '../types/Invoice';
+import moment from 'moment';
 
 interface LOGINQUERY {
 	id?: string;
@@ -25,16 +26,22 @@ interface LOGINQUERY {
 
 export const parseInvoices = (data: LOGINQUERY) => {
 	const { clients } = data;
-	let invoices: any = [];
+	let invoices: InvoiceType[] = [];
+	let overDue: InvoiceType[] = [];
+	let toBePaid: InvoiceType[] = [];
+	const today = new Date();
 	clients.forEach(client => {
-		const { firstName, lastName, phoneNumber, email, address } = client;
-		const clientInvoices = client.invoices.map(invoice => {
-			const { dateDue, isPaid, id } = invoice;
-			return {
+		client.invoices.forEach(invoice => {
+			const { dateDue, isPaid, id, products } = invoice;
+			const invoiceObject = {
 				id,
 				dateDue,
 				isPaid,
-				client: { firstName, lastName, phoneNumber, email, address },
+				products,
+				client: {
+					invoices,
+					...client
+				},
 				company: {
 					companyName: data.companyName,
 					address: data.address,
@@ -43,11 +50,17 @@ export const parseInvoices = (data: LOGINQUERY) => {
 				},
 				total: calculateTotal(invoice.products)
 			};
+			if (moment(dateDue).isAfter(today.getDate())) {
+				toBePaid.push(invoiceObject);
+			}
+			if (moment(today.getDate()).isAfter(dateDue)) {
+				overDue.push(invoiceObject);
+			}
+			invoices.push(invoiceObject);
 		});
-		invoices = [...invoices, ...clientInvoices];
 	});
 	console.table(invoices);
-	return invoices;
+	return [invoices, overDue, toBePaid];
 };
 
 export const calculateTotal = (data: Product[]) => {

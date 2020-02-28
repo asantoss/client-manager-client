@@ -3,9 +3,10 @@ export interface Product {
 	description: string;
 	quantity: number;
 	price: number;
+	subTotal?: number;
 }
 export interface Client {
-	id?: number;
+	id?: string | number;
 	firstName: string;
 	lastName: string;
 	email: string;
