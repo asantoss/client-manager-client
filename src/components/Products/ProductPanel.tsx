@@ -4,9 +4,9 @@ import { Input, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { useDispatch } from 'react-redux';
 import { useSpring } from 'react-spring';
-import { Button, ProductPanelStyled, MainActions } from '../../styles';
+import { Button, MainActions } from '../../styles';
+import { ProductPanelStyled, ProductForm } from '.';
 import { Product } from '../../types/Invoice';
-import { ProductForm } from '../../styles/ProductPanel';
 
 interface ProductPanelProps {
 	setProductOpen: Function;

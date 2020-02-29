@@ -3,19 +3,18 @@ import { useEffect } from 'react';
 import Layout from './components/Layouts/Layout';
 import { Route, Switch } from 'react-router-dom';
 import SignUp from './components/authentication/SignUp';
-import Clients from './components/Clients';
+import Clients from './components/Client/Clients';
 import SignIn from './components/authentication/SignIn';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import InvoiceCreator from './pages/InvoiceCreator';
-import TopBar from './components/Layouts/TopBar';
-
+import InvoiceCreator from './pages/InvoiceCreator/InvoiceCreator';
+import TopBar from './components/Layouts/Navbar/TopBar';
 import theme from './styles/theme';
 import { GlobalStyle } from './styles';
 import { client } from './cache';
-import Dashboard from './pages/Dashboard';
+import InvoicesPage from './pages/Invoices';
 
 interface user {
 	isLoggedIn: Boolean;
@@ -29,9 +28,9 @@ function App() {
 	const user: user = useSelector((state: any) => state.user);
 	const history = useHistory();
 	useEffect(() => {
-		if (!user.isLoggedIn) {
-			history.push('/login');
-		}
+		// if (!user.isLoggedIn) {
+		// 	history.push('/login');
+		// }
 	}, [user.isLoggedIn, history]);
 	return (
 		<ThemeProvider theme={theme}>
@@ -67,7 +66,7 @@ function App() {
 						render={() => {
 							return (
 								<Layout>
-									<Dashboard />
+									<InvoicesPage />
 								</Layout>
 							);
 						}}

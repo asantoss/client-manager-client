@@ -1,39 +1,36 @@
 import styled from 'styled-components';
 
-export { default } from './Dashboard';
+export { default } from './InvoicePage';
 
 interface Props {
 	overDueTotal: number;
 	toBePaidTotal: number;
 }
 
-export const DashboardContainer = styled.div<Props>`
+export const InvoicesContainer = styled.div<Props>`
 	display: flex;
 	flex-direction: column;
 	padding: 0.3em;
 	border-radius: 8px;
 	background-color: ${({ theme }) => theme.colors.foreground};
-	.dashboard__card {
+	.invoices__card {
 		display: flex;
 		justify-content: space-evenly;
 		padding: 1em;
 		border: 0.5px solid rgba(0, 0, 0, 0.2);
 		background-color: ${({ theme }) => theme.colors.foreground};
 		border-radius: 8px;
-		/* [class*='dashboard__'] {
-		
-	} */
-		& > * {
+		font-size: 1.5em;
+		& > div {
 			display: flex;
-			width: 50%;
-			justify-content: space-around;
+			flex-direction: column;
 		}
-
-		&--body {
+		&--toBePaid {
+			text-align: center;
 			color: ${({ toBePaidTotal, theme }) =>
 				toBePaidTotal > 0 ? theme.colors.primary : ''};
 		}
-		&--footer {
+		&--overDue {
 			text-align: center;
 			color: ${({ overDueTotal, theme }) =>
 				!!overDueTotal ? theme.colors.variants.danger : ''};
@@ -46,7 +43,7 @@ export const DashboardContainer = styled.div<Props>`
 			display: block;
 		}
 	}
-	.dashboard__body {
+	.invoices__body {
 		margin: 1em auto;
 		padding: 1em;
 		display: flex;
@@ -58,9 +55,6 @@ export const DashboardContainer = styled.div<Props>`
 			border: 0.5px solid rgba(0, 0, 0, 0.6);
 			margin: 0.5em 0;
 			font-size: 0.8em;
-			@media only screen and (max-width: 600px) {
-				flex-direction: column-reverse;
-			}
 		}
 		&--header {
 			display: flex;
@@ -70,15 +64,50 @@ export const DashboardContainer = styled.div<Props>`
 		[class|='invoice'] {
 			font-weight: 400;
 			line-height: 1.2em;
-			align-self: center;
-			text-align: center;
-			width: 15%;
 			padding: 0.2em;
 			flex-grow: 1;
 		}
 		.actions {
 			display: flex;
-			width: 45%;
+			align-self: center;
+			flex-grow: 1;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			margin: 1em;
+			padding-top: 1em;
+			border-top: 2px dotted rgba(0, 0, 0, 0.8);
+			& > div {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				align-content: center;
+			}
+		}
+	}
+
+	.invoice-information-container {
+		display: flex;
+		font-size: 1.2em;
+		font-weight: 500;
+		line-height: 1.5em;
+		& > div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			align-content: center;
+			span {
+				margin: 1em;
+			}
+		}
+	}
+	@media only screen and (max-width: 600px) {
+		.invoices__body {
+			&--invoice {
+				flex-direction: column-reverse;
+				align-items: stretch;
+				align-content: stretch;
+			}
 		}
 	}
 `;

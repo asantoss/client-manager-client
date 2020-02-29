@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DashboardContainer } from '.';
+import { InvoicesContainer } from '.';
 import InvoiceType from '../../types/Invoice';
 import moment from 'moment';
 import { IconButton } from '@material-ui/core';
@@ -16,7 +16,7 @@ export interface Props {
 }
 const today = new Date();
 
-const Dashboard: React.FC<Props> = () => {
+const InvoicesPage: React.FC<Props> = () => {
 	const { loading: queryLoading, data } = useQuery(GET_CLIENTS);
 	const [removeInvoice] = useMutation(REMOVE_INVOICE);
 
@@ -66,61 +66,84 @@ const Dashboard: React.FC<Props> = () => {
 	let overDueTotal = overDue.reduce((acc, curr) => (acc += curr.total), 0);
 	let toBePaidTotal = toBePaid.reduce((acc, curr) => (acc += curr.total), 0);
 	return (
-		<DashboardContainer
+		<InvoicesContainer
 			overDueTotal={overDueTotal}
 			toBePaidTotal={toBePaidTotal}>
-			<div className='dashboard__title'>
+			<div className='invoices__title'>
 				<h2>Invoices</h2>
 			</div>
-			<div className='dashboard__card'>
-				<div className='dashboard__card--body'>
-					<h2>To be paid</h2>
+			<div className='invoices__card'>
+				<div className='invoices__card--toBePaid'>
+					<h5>To be paid</h5>
 					<div>
 						<span>${toBePaidTotal}</span>
 						<span>{toBePaid.length} Invoices</span>
 					</div>
 				</div>
-				<div className='dashboard__card--footer'>
-					<h2>Overdue</h2>
+				<div className='invoices__card--overDue'>
+					<h5>Overdue</h5>
 					<div>
 						<span>${overDueTotal}</span>
 						<span>{overDue.length} Invoices</span>
 					</div>
 				</div>
 			</div>
-			<div className='dashboard__body'>
-				<div className='dashboard__body--header'>
+			<div className='invoices__body'>
+				{/* <div className='invoices__body--header'>
 					<h3>Name</h3>
 					<h3>Total</h3>
 					<h3>Date Due</h3>
 					<h3>Status</h3>
-				</div>
+				</div> */}
 				{!invoices.length && 'No invoices'}
 				{invoices.map((invoice, index) => {
 					const { client, dateDue, isPaid, total, id } = invoice;
 					return (
-						<div className='dashboard__body--invoice'>
+						<div className='invoices__body--invoice'>
 							<div className='actions'>
-								<IconButton onClick={() => handleDelete(id, index)}>
-									<Delete />
-								</IconButton>
-								<IconButton>
-									<CloudDownload onClick={() => handleDownload(invoice)} />
-								</IconButton>
-								<IconButton onClick={() => handleView(invoice)}>
-									<Edit />
-								</IconButton>
+								<div>
+									<span>Delete</span>
+									<IconButton
+										onClick={() => handleDelete(id, index)}
+										color='inherit'>
+										<Delete />
+									</IconButton>
+								</div>
+								<div>
+									<span>Download</span>
+									<IconButton
+										onClick={() => handleDownload(invoice)}
+										color='inherit'>
+										<CloudDownload />
+									</IconButton>
+								</div>
+								<div>
+									<span>Edit</span>
+									<IconButton
+										onClick={() => handleView(invoice)}
+										color='inherit'>
+										<Edit />
+									</IconButton>
+								</div>
 								{/* <IconButton onClick={() => handleMarkPaid(invoice, index)}>
 									<Check />
 								</IconButton> */}
 							</div>
-							<div>
+							<div className='invoice-information-container'>
 								<div className='invoice-clientName'>
+									<span>Name</span>
 									{client.firstName} {client.lastName}
 								</div>
-								<div className='invoice-total'>{total}</div>
-								<div className='invoice-date'>{dateDue}</div>
+								<div className='invoice-total'>
+									<span>Amount</span>
+									{total}
+								</div>
+								<div className='invoice-date'>
+									<span>Date</span>
+									{dateDue}
+								</div>
 								<div className='invoice-status'>
+									<span>Status</span>
 									{isPaid ? (
 										<Done style={{ color: 'green' }} />
 									) : (
@@ -132,11 +155,11 @@ const Dashboard: React.FC<Props> = () => {
 					);
 				})}
 			</div>
-		</DashboardContainer>
+		</InvoicesContainer>
 	);
 };
 
-export default Dashboard;
+export default InvoicesPage;
 
 // function consumeInvoiceData(invoices: InvoiceType[], callBack: Function) {
 // 	for (let i = 0; i < invoices.length; i++) {

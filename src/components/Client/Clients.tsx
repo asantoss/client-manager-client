@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { GET_CLIENTS } from '../apollo/constants';
+import { GET_CLIENTS } from '../../apollo/constants';
 import { useLazyQuery } from '@apollo/react-hooks';
-import { Client as ClientType } from '../types/Invoice';
-import { ClientContainer } from '../styles/Clients';
+import { Client as ClientType } from '../../types/Invoice';
+import { ClientContainer } from '.';
 
 import Client from './Client';
 

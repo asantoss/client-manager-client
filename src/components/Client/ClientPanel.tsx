@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, MainActions, ClientPanelStyled } from '../../styles';
+import { Button, MainActions } from '../../styles';
 import { Client } from '../../types/Invoice';
-import { AppState } from '../../reducers/';
+import { AppState } from '../../reducers';
 import ClientInformation from './ClientInformation';
+import { ClientPanelStyled } from '.';
 
 interface ClientPanelProps {
 	setClientOpen: Function;

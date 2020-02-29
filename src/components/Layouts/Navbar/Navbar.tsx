@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import { PlusOne, Receipt } from '@material-ui/icons';
-import { Bottombar } from '../../styles/Navbar';
+import { Bottombar } from '.';
 
 function Navbar() {
 	return (

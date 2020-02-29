@@ -50,10 +50,10 @@ export const parseInvoices = (data: LOGINQUERY) => {
 				},
 				total: calculateTotal(invoice.products)
 			};
-			if (moment(dateDue).isAfter(today.getDate())) {
+			if (moment(dateDue).isAfter(today.getDate()) && !isPaid) {
 				toBePaid.push(invoiceObject);
 			}
-			if (moment(today.getDate()).isAfter(dateDue)) {
+			if (moment(today.getDate()).isAfter(dateDue) && !isPaid) {
 				overDue.push(invoiceObject);
 			}
 			invoices.push(invoiceObject);

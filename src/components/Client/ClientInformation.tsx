@@ -9,7 +9,7 @@ import {
 	Typography
 } from '@material-ui/core';
 import { css } from '@emotion/core';
-import { ClientInformationForm } from '../../styles/Clients';
+import { ClientInformationForm } from '.';
 import { useDispatch } from 'react-redux';
 import { Client } from '../../types/Invoice';
 const ClientSchema = Yup.object().shape({

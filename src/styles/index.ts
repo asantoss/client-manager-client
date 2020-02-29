@@ -3,14 +3,6 @@ import { animated } from 'react-spring';
 import { Toolbar as MaterialToolbar } from '@material-ui/core';
 export { default as Button } from './Button';
 export { MainActions } from './MainActions';
-export {
-	ClientStyled,
-	ClientContainer,
-	ClientPanelStyled,
-	ClientInformationForm
-} from './Clients';
-export { InvoiceCreatorContainer, ProductItem } from './InvoiceCreator';
-export { default as SignUpFormContainer } from './SignUpFormContainer';
 //@ts-ignore
 export const GlobalStyle = createGlobalStyle`
 *{
@@ -40,50 +32,9 @@ export const Toolbar = styled(MaterialToolbar)`
 	}
 `;
 
-export const ProductPanelStyled = styled(animated.div)`
-	display: flex;
-	flex-direction: column;
-	overflow-x: hidden;
-	background-color: ${props => props.theme.colors.foreground};
-	label {
-		padding-left: 1em;
-	}
-	p {
-		margin: 1em;
-	}
-`;
-
 export const LayoutStyled = styled.div`
 	color: white;
 	padding: 0.5em;
-`;
-
-export const SignInForm = styled.form`
-	color: white;
-	padding: 1em;
-	margin: auto;
-	max-width: 550px;
-	align-self: center;
-	border-radius: 8px;
-	background-color: ${props => props.theme.colors.foreground};
-	color: white;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	& > button {
-		align-self: flex-end;
-	}
-	& > div {
-		margin: 1em;
-	}
-	input {
-		background: white;
-	}
-	a {
-		margin: 1em;
-		font-size: 1.5em;
-		color: ${({ theme }) => theme.colors.primary};
-	}
 `;
 
 export const ModalStyled = styled.div`

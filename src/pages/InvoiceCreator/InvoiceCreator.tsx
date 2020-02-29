@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '../Modal';
+import Modal from '../../Modal';
 import { IconButton, Switch } from '@material-ui/core';
-import ProductPanel from '../components/Forms/ProductPanel';
+import ProductPanel from '../../components/Products/ProductPanel';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddCircle } from '@material-ui/icons';
 import { useLocation, useHistory, useParams } from 'react-router-dom';
 import { useTransition } from 'react-spring';
-import { Button, InvoiceCreatorContainer, ProductItem } from '../styles/index';
-import ClientPanel from '../components/Forms/ClientPanel';
+import { Button } from '../../styles/index';
+import { InvoiceCreatorContainer, ProductItem } from '.';
+import ClientPanel from '../../components/Client/ClientPanel';
 import { animated } from 'react-spring';
-import { makePDf, converToCurrency, createDateInput } from '../utils/PDFcreate';
+import {
+	makePDf,
+	converToCurrency,
+	createDateInput
+} from '../../utils/PDFcreate';
 import { useMutation } from '@apollo/react-hooks';
-import { CREATE_INVOICE, UPDATE_INVOICE } from '../apollo/constants';
+import { CREATE_INVOICE, UPDATE_INVOICE } from '../../apollo/constants';
 
 export default function InvoiceCreator() {
 	const [errorMessage, setErrorMessage] = useState('');

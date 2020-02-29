@@ -12,8 +12,8 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { LOGIN } from '../../apollo/constants';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { SignInForm, Button } from '../../styles';
-
+import { Button } from '../../styles';
+import { SignInForm } from '.';
 const SignIn: React.FC<{ redirect: string }> = ({ redirect }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();

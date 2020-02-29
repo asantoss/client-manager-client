@@ -1,4 +1,3 @@
-import Client from '../types/Invoice';
 import InvoiceType from '../types/Invoice';
 
 const initialState: AuthState = {

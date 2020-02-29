@@ -1,5 +1,17 @@
 import styled from 'styled-components';
 
+export const ProductPanelStyled = styled.div`
+	display: flex;
+	flex-direction: column;
+	overflow-x: hidden;
+	background-color: ${props => props.theme.colors.foreground};
+	label {
+		padding-left: 1em;
+	}
+	p {
+		margin: 1em;
+	}
+`;
 export const ProductForm = styled.form`
 	display: flex;
 	align-self: center;
@@ -40,8 +52,7 @@ export const ProductForm = styled.form`
 			text-align: center;
 		}
 		.active {
-			border-bottom: ${({ theme }) =>
-				`1px solid ${theme.colors.primary}`};
+			border-bottom: ${({ theme }) => `1px solid ${theme.colors.primary}`};
 			transition: border linear 0.3s;
 		}
 		& .qty {

@@ -12,7 +12,8 @@ import { useMutation } from '@apollo/react-hooks';
 import { REGISTER } from '../../apollo/constants';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { SignUpFormContainer, Button } from '../../styles';
+import { Button } from '../../styles';
+import { SignUpFormContainer } from '.';
 
 const SignUpSchema = Yup.object().shape({
 	firstName: Yup.string()

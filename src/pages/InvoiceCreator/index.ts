@@ -43,9 +43,12 @@ export const ProductItem = styled.div`
 	padding: 0 1em;
 	& > p {
 		display: flex;
+		align-items: center;
+		align-content: center;
 		flex-direction: column;
 		font-size: 0.9em;
 		span {
+			align-self: flex-start;
 			font-size: 0.7em;
 		}
 	}

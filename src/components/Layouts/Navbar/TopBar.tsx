@@ -4,7 +4,7 @@ import { NavLink, withRouter, useHistory } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import { More, ExitToApp, AssignmentInd } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { AppState } from '../../reducers';
+import { AppState } from '../../../reducers';
 import styled from 'styled-components';
 
 const TopBarStyled = styled.div`

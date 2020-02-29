@@ -6,8 +6,9 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-import { Button, ClientStyled } from '../styles/index';
-import { Client as ClientType } from '../types/Invoice';
+import { Button } from '../../styles/index';
+import { Client as ClientType } from '../../types/Invoice';
+import { ClientStyled } from '.';
 
 interface ClientProps {
 	client: ClientType;
