@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, withRouter, useHistory } from 'react-router-dom';
 
 import { IconButton } from '@material-ui/core';
-import { More, ExitToApp, AssignmentInd } from '@material-ui/icons';
+import { PostAdd, ExitToApp, AssignmentInd } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../../reducers';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ const TopBarStyled = styled.div`
 	background-color: ${({ theme }) => theme.colors.foreground};
 	top: 0;
 	left: 0;
+	z-index: 4;
 	padding: 0.2em 1em;
 	position: absolute;
 	display: flex;
@@ -46,9 +47,10 @@ function Topbar() {
 			<NavLink to='/' activeClassName='current'>
 				<h1>Client Manager</h1>
 			</NavLink>
-
-			<IconButton edge='end' onClick={() => history.goBack()} color='inherit'>
-				<More />
+			<IconButton edge='end' color='inherit'>
+				<NavLink to='/invoice/creator'>
+					<PostAdd />
+				</NavLink>
 			</IconButton>
 		</TopBarStyled>
 	);

@@ -4,6 +4,7 @@ export const ProductPanelStyled = styled.div`
 	display: flex;
 	flex-direction: column;
 	overflow-x: hidden;
+	margin: 1.5em 0;
 	background-color: ${props => props.theme.colors.foreground};
 	label {
 		padding-left: 1em;

@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import Layout from './components/Layouts/Layout';
 import { Route, Switch } from 'react-router-dom';
 import SignUp from './components/authentication/SignUp';
 import Clients from './components/Client/Clients';
 import SignIn from './components/authentication/SignIn';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import InvoiceCreator from './pages/InvoiceCreator/InvoiceCreator';
 import TopBar from './components/Layouts/Navbar/TopBar';
@@ -15,6 +13,7 @@ import theme from './styles/theme';
 import { GlobalStyle } from './styles';
 import { client } from './cache';
 import InvoicesPage from './pages/Invoices';
+import { HomePage } from './pages/Home';
 
 interface user {
 	isLoggedIn: Boolean;
@@ -25,13 +24,14 @@ interface user {
 }
 
 function App() {
-	const user: user = useSelector((state: any) => state.user);
-	const history = useHistory();
-	useEffect(() => {
-		// if (!user.isLoggedIn) {
-		// 	history.push('/login');
-		// }
-	}, [user.isLoggedIn, history]);
+	// const user: user = useSelector((state: any) => state.user);
+	// const history = useHistory();
+	// const location = useLocation();
+	// useEffect(() => {
+	// 	if (!user.isLoggedIn && location.pathname !== '/invoice/creator') {
+	// 		history.push('/login');
+	// 	}
+	// }, [user.isLoggedIn, history, location.pathname]);
 	return (
 		<ThemeProvider theme={theme}>
 			<GlobalStyle />
@@ -40,11 +40,22 @@ function App() {
 				<Switch>
 					<Route
 						exact
-						path='/'
+						path='/clients'
 						render={() => {
 							return (
 								<Layout>
 									<Clients />
+								</Layout>
+							);
+						}}
+					/>
+					<Route
+						exact
+						path='/'
+						render={() => {
+							return (
+								<Layout>
+									<HomePage />
 								</Layout>
 							);
 						}}

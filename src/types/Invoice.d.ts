@@ -25,8 +25,9 @@ export interface Company {
 }
 
 export default interface InvoiceType {
-	id: string;
+	id?: string;
 	isPaid: Boolean;
+	dateCreated?: string;
 	dateDue: string;
 	client: Client;
 	company?: Company;

@@ -7,8 +7,11 @@ import { Delete, Edit, Done, Close, CloudDownload } from '@material-ui/icons';
 import { makePDf } from '../../utils/PDFcreate';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { REMOVE_INVOICE, GET_CLIENTS } from '../../apollo/constants';
-import { parseInvoices } from '../../utils/parseInvoices';
-import { useDispatch } from 'react-redux';
+import {
+	parseInvoices,
+	parseInvoicesFromLocal
+} from '../../utils/parseInvoices';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 export interface Props {
@@ -17,16 +20,16 @@ export interface Props {
 const today = new Date();
 
 const InvoicesPage: React.FC<Props> = () => {
+	const user = useSelector((state: any) => state.user);
 	const { loading: queryLoading, data } = useQuery(GET_CLIENTS);
 	const [removeInvoice] = useMutation(REMOVE_INVOICE);
-
 	const [overDue, setOverDue] = React.useState<InvoiceType[]>([]);
 	const [toBePaid, setToBePaid] = React.useState<InvoiceType[]>([]);
 	const [invoices, setInvoices] = React.useState<InvoiceType[]>([]);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	React.useEffect(() => {
-		if (data) {
+		if (data && user.isLoggedIn) {
 			const [
 				invoicesData,
 				overDueData,
@@ -36,7 +39,17 @@ const InvoicesPage: React.FC<Props> = () => {
 			setInvoices(s => [...invoicesData]);
 			setToBePaid(s => [...toBePaidData]);
 		}
-	}, [data]);
+		if (!user.isLoggedIn && !data) {
+			const [
+				invoicesData,
+				overDueData,
+				toBePaidData
+			]: InvoiceType[][] = parseInvoicesFromLocal();
+			setOverDue(s => [...overDueData]);
+			setInvoices(s => [...invoicesData]);
+			setToBePaid(s => [...toBePaidData]);
+		}
+	}, [data, user]);
 	const handleView = async (invoice: InvoiceType) => {
 		dispatch({ type: 'LOAD_INVOICE', payload: invoice });
 		history.push('/invoice/editor');
@@ -46,6 +59,19 @@ const InvoicesPage: React.FC<Props> = () => {
 	};
 
 	const handleDelete = async (id: string, index: number) => {
+		if (!user.isLoggedIn) {
+			const localInvoicesJSON = localStorage.getItem('invoices');
+			if (localInvoicesJSON) {
+				const localInvoices = JSON.parse(localInvoicesJSON);
+				debugger;
+				const newData = [
+					...localInvoices.slice(0, index),
+					...localInvoices.slice(index + 1)
+				];
+				localStorage.setItem('invoices', JSON.stringify(newData));
+				return setInvoices(s => [...s.slice(0, index), ...s.slice(index + 1)]);
+			}
+		}
 		const { data } = await removeInvoice({
 			variables: {
 				id: Number(id)
@@ -104,7 +130,9 @@ const InvoicesPage: React.FC<Props> = () => {
 								<div>
 									<span>Delete</span>
 									<IconButton
-										onClick={() => handleDelete(id, index)}
+										onClick={() => {
+											if (id) handleDelete(id, index);
+										}}
 										color='inherit'>
 										<Delete />
 									</IconButton>

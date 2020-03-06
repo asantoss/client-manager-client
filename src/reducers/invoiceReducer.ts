@@ -6,6 +6,7 @@ const initialState: InvoiceType = {
 	isPaid: false,
 	total: 0,
 	dateDue: createDateInput(),
+	dateCreated: createDateInput(),
 	client: {
 		id: 0,
 		firstName: '',

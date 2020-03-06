@@ -53,9 +53,7 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 		return () => {};
 	}, [localStorageProducts]);
 	const loadProduct = (product: Product): void => {
-		if (typeof product.quantity === 'number') {
-			setIsflat(product.quantity > 1 ? false : true);
-		}
+		setIsflat(product.quantity > 1 ? false : true);
 		formik.setValues(
 			{
 				...product

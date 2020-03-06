@@ -13,10 +13,7 @@ const Modal: React.FC<{ children: any }> = ({ children }) => {
 		modalRoot?.appendChild(elRef.current);
 		return () => modalRoot?.removeChild(elRef.current);
 	}, []);
-	return createPortal(
-		<ModalStyled>{children}</ModalStyled>,
-		elRef.current
-	);
+	return createPortal(<ModalStyled>{children}</ModalStyled>, elRef.current);
 };
 
 export default Modal;

@@ -45,9 +45,9 @@ export const ModalStyled = styled.div`
 	z-index: 2;
 	width: 100vw;
 	height: 100%;
-	margin-bottom: 56px;
-	background-color: ${props => props.theme.colors.background};
 	position: absolute;
+	top: 60px;
+	bottom: 0;
 	@media (min-width: 700px) {
 		max-width: 600px;
 	}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Navbar from './Navbar/Navbar';
+// import Navbar from './Navbar/Navbar';
 import { LayoutStyled } from '../../styles';
 
 interface LayoutProps {
@@ -9,9 +9,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 	return (
 		<LayoutStyled>
 			<main>{children}</main>
-			<footer>
+			{/* <footer>
 				<Navbar />
-			</footer>
+			</footer> */}
 		</LayoutStyled>
 	);
 };

@@ -24,6 +24,28 @@ interface LOGINQUERY {
 	];
 }
 
+export const parseInvoicesFromLocal = () => {
+	let invoices: InvoiceType[] = [];
+	let overDue: InvoiceType[] = [];
+	let toBePaid: InvoiceType[] = [];
+	const today = new Date();
+	const localInvoices = localStorage.getItem('invoices');
+	if (localInvoices) {
+		const invoicesParsed = JSON.parse(localInvoices);
+		invoicesParsed.forEach((invoiceObject: InvoiceType) => {
+			const { dateDue, isPaid } = invoiceObject;
+			if (moment(dateDue).isAfter(today.getDate()) && !isPaid) {
+				toBePaid.push(invoiceObject);
+			}
+			if (moment(today.getDate()).isAfter(dateDue) && !isPaid) {
+				overDue.push(invoiceObject);
+			}
+			invoices.push(invoiceObject);
+		});
+	}
+	return [invoices, overDue, toBePaid];
+};
+
 export const parseInvoices = (data: LOGINQUERY) => {
 	const { clients } = data;
 	let invoices: InvoiceType[] = [];

@@ -76,7 +76,7 @@ export const InvoicesContainer = styled.div<Props>`
 			width: 100%;
 			margin: 1em;
 			padding-top: 1em;
-			border-top: 2px dotted rgba(0, 0, 0, 0.8);
+
 			& > div {
 				display: flex;
 				flex-direction: column;
@@ -107,6 +107,9 @@ export const InvoicesContainer = styled.div<Props>`
 				flex-direction: column-reverse;
 				align-items: stretch;
 				align-content: stretch;
+			}
+			.actions {
+				border-top: 2px dotted rgba(0, 0, 0, 0.8);
 			}
 		}
 	}

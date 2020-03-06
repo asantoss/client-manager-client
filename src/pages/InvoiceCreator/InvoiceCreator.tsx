@@ -17,6 +17,7 @@ import {
 } from '../../utils/PDFcreate';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_INVOICE, UPDATE_INVOICE } from '../../apollo/constants';
+import { saveInvoiceToLocalStorage } from '../../utils/localStorageFuncs';
 
 export default function InvoiceCreator() {
 	const [errorMessage, setErrorMessage] = useState('');
@@ -39,7 +40,7 @@ export default function InvoiceCreator() {
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
 		config: { duration: 200 }
 	});
-	const invoiceData = useSelector((state: any) => state.invoice);
+	const { invoice: invoiceData, user } = useSelector((state: any) => state);
 	const { state } = useLocation();
 	const dispatch = useDispatch();
 
@@ -60,8 +61,23 @@ export default function InvoiceCreator() {
 	}, 0);
 	const handleSaveInvoice = () => {
 		setErrorMessage('');
-		if (invoiceData.products.length === 0) {
+		if (
+			invoiceData.products.length === 0 ||
+			invoiceData.client.firstName.length === 0
+		) {
+			setErrorMessage('Please add some data to your invoice.');
 			return;
+		}
+		if (!user.isLoggedIn) {
+			try {
+				saveInvoiceToLocalStorage({
+					...invoiceData,
+					total: totalCost
+				});
+				history.push('/invoices');
+			} catch (e) {
+				setErrorMessage("Couldn't save invoice to local storage.");
+			}
 		}
 		switch (type) {
 			case 'creator':
@@ -113,7 +129,7 @@ export default function InvoiceCreator() {
 	// const tax = totalCost * 0.07;
 	return (
 		<InvoiceCreatorContainer>
-			<h3>{errorMessage}</h3>
+			{errorMessage && <span>{errorMessage}</span>}
 			<div className='invoice-panel'>
 				<h2>CUSTOMER</h2>
 				<hr />
@@ -198,6 +214,11 @@ export default function InvoiceCreator() {
 					className='panel-actions'
 					onClick={() => {
 						setProductOpen(!isProductOpen);
+						window.scroll({
+							top: 0,
+							left: 0,
+							behavior: 'smooth'
+						});
 					}}>
 					<AddCircle />
 					<p>Add Product</p>
