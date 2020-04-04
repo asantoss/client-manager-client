@@ -8,6 +8,10 @@ const link = new HttpLink({
 	fetchOptions: {
 		credentials: 'include',
 	},
+	headers: {
+		'Access-Control-Allow-Origin':
+			'https://clientmanagerserver.herokuapp.com/graphql',
+	},
 });
 export const client = new ApolloClient({
 	cache,
