@@ -1,16 +1,17 @@
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
+
+let clientLink = process.env.REACT_APP_API_URI;
+if (process.env.NODE_ENV !== 'production') {
+	clientLink = 'localhost:3000';
+}
 const cache = new InMemoryCache({ addTypename: false });
 const link = new HttpLink({
-	uri: 'https://clientmanagerserver.herokuapp.com/graphql',
+	uri: clientLink,
 	credentials: 'include',
 	fetchOptions: {
 		credentials: 'include',
-	},
-	headers: {
-		'Access-Control-Allow-Origin':
-			'https://clientmanagerserver.herokuapp.com/graphql',
 	},
 });
 export const client = new ApolloClient({
