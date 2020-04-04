@@ -1,7 +1,6 @@
 import Invoice from '../types/Invoice';
 
 export function saveInvoiceToLocalStorage(invoice: Invoice): void {
-	debugger;
 	const localStorageInvoices = localStorage.getItem('invoices');
 	let filteredInvoices = [];
 	let localStorageInvoicesParsed = [];

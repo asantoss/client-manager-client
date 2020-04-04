@@ -1,6 +1,6 @@
 import InvoiceType, { Product } from '../types/Invoice';
 import moment from 'moment';
-
+import dateFunction from './dateFunction';
 interface LOGINQUERY {
 	id?: string;
 	companyName: string;
@@ -40,6 +40,7 @@ export const parseInvoicesFromLocal = () => {
 			if (moment(today.getDate()).isAfter(dateDue) && !isPaid) {
 				overDue.push(invoiceObject);
 			}
+
 			invoices.push(invoiceObject);
 		});
 	}
@@ -52,8 +53,8 @@ export const parseInvoices = (data: LOGINQUERY) => {
 	let overDue: InvoiceType[] = [];
 	let toBePaid: InvoiceType[] = [];
 	const today = new Date();
-	clients.forEach(client => {
-		client.invoices.forEach(invoice => {
+	clients.forEach((client) => {
+		client.invoices.forEach((invoice) => {
 			const { dateDue, isPaid, id, products } = invoice;
 			const invoiceObject = {
 				id,
@@ -62,15 +63,15 @@ export const parseInvoices = (data: LOGINQUERY) => {
 				products,
 				client: {
 					invoices,
-					...client
+					...client,
 				},
 				company: {
 					companyName: data.companyName,
 					address: data.address,
 					email: data.email,
-					phoneNumber: data.phoneNumber
+					phoneNumber: data.phoneNumber,
 				},
-				total: calculateTotal(invoice.products)
+				total: calculateTotal(invoice.products),
 			};
 			if (moment(dateDue).isAfter(today.getDate()) && !isPaid) {
 				toBePaid.push(invoiceObject);
@@ -81,7 +82,6 @@ export const parseInvoices = (data: LOGINQUERY) => {
 			invoices.push(invoiceObject);
 		});
 	});
-	console.table(invoices);
 	return [invoices, overDue, toBePaid];
 };
 

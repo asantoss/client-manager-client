@@ -24,14 +24,6 @@ interface user {
 }
 
 function App() {
-	// const user: user = useSelector((state: any) => state.user);
-	// const history = useHistory();
-	// const location = useLocation();
-	// useEffect(() => {
-	// 	if (!user.isLoggedIn && location.pathname !== '/invoice/creator') {
-	// 		history.push('/login');
-	// 	}
-	// }, [user.isLoggedIn, history, location.pathname]);
 	return (
 		<ThemeProvider theme={theme}>
 			<GlobalStyle />

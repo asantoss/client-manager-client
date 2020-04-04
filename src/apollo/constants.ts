@@ -116,6 +116,36 @@ export const CREATE_INVOICE = gql`
 	}
 `;
 
+export const CREATE_CLIENT = gql`
+	mutation createClient(
+		$firstName: String
+		$lastName: String
+		$email: String
+		$phoneNumber: String
+		$address: String
+		$city: String
+		$zipCode: String
+		$UserId: Int!
+	) {
+		createClient(
+			firstName: $firstName
+			lastName: $lastName
+			email: $email
+			phoneNumber: $phoneNumber
+			address: $address
+			city: $city
+			zipCode: $zipCode
+			UserId: $UserId
+		) {
+			id
+			user {
+				id
+				firstName
+			}
+		}
+	}
+`;
+
 export const UPDATE_INVOICE = gql`
 	mutation updateInvoice(
 		$id: Int!

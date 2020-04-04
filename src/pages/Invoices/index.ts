@@ -12,6 +12,7 @@ export const InvoicesContainer = styled.div<Props>`
 	flex-direction: column;
 	padding: 0.3em;
 	border-radius: 8px;
+	margin: 1em 0;
 	background-color: ${({ theme }) => theme.colors.foreground};
 	.invoices__card {
 		display: flex;

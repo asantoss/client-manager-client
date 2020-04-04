@@ -6,11 +6,13 @@ import {
 	TextField,
 	Button,
 	CircularProgress,
-	Typography
+	Typography,
 } from '@material-ui/core';
 import { css } from '@emotion/core';
 import { ClientInformationForm } from '.';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMutation } from '@apollo/react-hooks';
+import { CREATE_CLIENT } from '../../apollo/constants';
 import { Client } from '../../types/Invoice';
 const ClientSchema = Yup.object().shape({
 	firstName: Yup.string()
@@ -21,9 +23,7 @@ const ClientSchema = Yup.object().shape({
 		.min(2, 'Too Short!')
 		.max(50, 'Too long!')
 		.required('Required'),
-	email: Yup.string()
-		.email('Invalid Email')
-		.required('Required')
+	email: Yup.string().email('Invalid Email').required('Required'),
 });
 
 interface ClientInformationProps {
@@ -35,9 +35,11 @@ interface ClientInformationProps {
 const ClientInformation: React.FC<ClientInformationProps> = ({
 	setClientOpen,
 	isClientOpen,
-	saveToLocal
+	saveToLocal,
 }) => {
 	const [loading, setLoading] = React.useState(false);
+	const { isLoggedIn, id } = useSelector((state: any) => state.user);
+	const [createClient] = useMutation(CREATE_CLIENT);
 	const dispatch = useDispatch();
 	const formik = useFormik({
 		initialValues: {
@@ -47,18 +49,33 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 			phoneNumber: '',
 			address: '',
 			city: '',
-			zipCode: ''
+			zipCode: '',
 		},
 		validationSchema: ClientSchema,
-		onSubmit: values => {
+		onSubmit: (values) => {
 			handleNext(values);
-		}
+		},
 	});
 	const handleNext = (values: Client) => {
-		setLoading(!loading);
-		saveToLocal({ ...values });
-		dispatch({ type: 'SET_CLIENT', payload: values });
-		setTimeout(() => setClientOpen(false), 500);
+		if (isLoggedIn) {
+			createClient({
+				variables: {
+					...values,
+					UserId: Number(id),
+				},
+			}).then(({ data }) => {
+				dispatch({
+					type: 'SET_CLIENT',
+					payload: { ...values, id: Number(data?.createClient?.id) },
+				});
+				setTimeout(() => setClientOpen(false), 500);
+			});
+		} else {
+			setLoading(!loading);
+			saveToLocal({ ...values });
+			dispatch({ type: 'SET_CLIENT', payload: values });
+			setTimeout(() => setClientOpen(false), 500);
+		}
 	};
 	if (loading) {
 		return (
@@ -153,7 +170,7 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 				style={{
 					color: 'white',
 					width: '50px',
-					alignSelf: 'center'
+					alignSelf: 'center',
 				}}
 				variant='contained'
 				type='submit'>

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, withRouter, useHistory } from 'react-router-dom';
 
 import { IconButton } from '@material-ui/core';
-import { PostAdd, ExitToApp, AssignmentInd } from '@material-ui/icons';
+import { PostAdd, ExitToApp, AssignmentInd, Receipt } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../../reducers';
 import styled from 'styled-components';
@@ -20,6 +20,11 @@ const TopBarStyled = styled.div`
 	color: ${({ theme }) => theme.colors.primary};
 	a {
 		color: inherit;
+	}
+	.actions {
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
 	}
 `;
 
@@ -47,11 +52,18 @@ function Topbar() {
 			<NavLink to='/' activeClassName='current'>
 				<h1>Client Manager</h1>
 			</NavLink>
-			<IconButton edge='end' color='inherit'>
-				<NavLink to='/invoice/creator'>
-					<PostAdd />
-				</NavLink>
-			</IconButton>
+			<div className='actions'>
+				<IconButton edge='end' color='inherit'>
+					<NavLink to='/invoice/creator'>
+						<PostAdd />
+					</NavLink>
+				</IconButton>
+				<IconButton color='inherit'>
+					<NavLink to='/invoices' activeClassName='current'>
+						<Receipt />
+					</NavLink>
+				</IconButton>
+			</div>
 		</TopBarStyled>
 	);
 }

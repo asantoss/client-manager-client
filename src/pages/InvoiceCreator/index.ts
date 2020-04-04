@@ -31,7 +31,7 @@ export const InvoiceCreatorContainer = styled.div`
 	}
 	.invoice-panel {
 		background-color: ${({ theme }) => theme.colors.foreground};
-		margin: 0.5em;
+		margin: 0.8em;
 		padding: 1em;
 		border-radius: 0.2em;
 	}

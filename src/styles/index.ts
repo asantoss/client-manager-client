@@ -12,7 +12,7 @@ export const GlobalStyle = createGlobalStyle`
 
 body {
   background-color: ${({ theme }) => theme.colors.background};
-  font-size: 12px;
+  /* font-size: 1px; */
   max-width: 600px;
   margin: 70px auto; 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -43,9 +43,10 @@ export const LayoutStyled = styled.div`
 
 export const ModalStyled = styled.div`
 	z-index: 2;
-	width: 100vw;
+	width: 100vw !important;
+	background-color: rgba(0, 0, 0, 0.8);
 	height: 100%;
-	position: absolute;
+	position: fixed;
 	top: 60px;
 	bottom: 0;
 	@media (min-width: 700px) {
@@ -59,7 +60,7 @@ export const DocStyled = styled(animated.div)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: ${props => props.theme.colors.foreground};
+	background-color: ${(props) => props.theme.colors.foreground};
 	.viewer {
 		width: 80%;
 		height: 80%;

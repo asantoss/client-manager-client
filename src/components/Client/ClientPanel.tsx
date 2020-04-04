@@ -51,12 +51,12 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 				<div className='client-list'>
 					<div style={{ borderBottom: '1px dotted black', color: 'White' }}>
 						<h5>Recently Used</h5>
-						{localClients.map(client => {
+						{localClients.map((client, index) => {
 							return (
 								<div
 									onClick={() => handleSetClient(client)}
 									className='client'
-									key={client.id?.toString()}>
+									key={index}>
 									<span>{`${client.firstName + client.lastName}`}</span>
 									<span>{client.email}</span>
 								</div>
@@ -64,12 +64,12 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 						})}
 					</div>
 					{clients &&
-						clients.map((client: Client) => {
+						clients.map((client: Client, index: number) => {
 							return (
 								<div
 									onClick={() => handleSetClient(client)}
 									className='client'
-									key={client.id?.toString()}>
+									key={index}>
 									<span>{`${client.firstName + client.lastName}`}</span>
 									<span>{client.email}</span>
 								</div>

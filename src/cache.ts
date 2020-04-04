@@ -3,8 +3,11 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 const cache = new InMemoryCache({ addTypename: false });
 const link = new HttpLink({
-	uri: '/graphql',
-	credentials: 'same-origin'
+	uri: 'https://clientmanagerserver.herokuapp.com/graphql',
+	credentials: 'include',
+	fetchOptions: {
+		credentials: 'include',
+	},
 });
 export const client = new ApolloClient({
 	cache,
@@ -12,14 +15,14 @@ export const client = new ApolloClient({
 	name: 'React Front End Client',
 	defaultOptions: {
 		watchQuery: {
-			fetchPolicy: 'cache-and-network'
+			fetchPolicy: 'cache-and-network',
 		},
 		query: {
 			fetchPolicy: 'network-only',
-			errorPolicy: 'all'
+			errorPolicy: 'all',
 		},
 		mutate: {
-			errorPolicy: 'all'
-		}
-	}
+			errorPolicy: 'all',
+		},
+	},
 });

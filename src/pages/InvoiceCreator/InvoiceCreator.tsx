@@ -13,10 +13,14 @@ import { animated } from 'react-spring';
 import {
 	makePDf,
 	converToCurrency,
-	createDateInput
+	createDateInput,
 } from '../../utils/PDFcreate';
 import { useMutation } from '@apollo/react-hooks';
-import { CREATE_INVOICE, UPDATE_INVOICE } from '../../apollo/constants';
+import {
+	CREATE_INVOICE,
+	UPDATE_INVOICE,
+	CREATE_CLIENT,
+} from '../../apollo/constants';
 import { saveInvoiceToLocalStorage } from '../../utils/localStorageFuncs';
 
 export default function InvoiceCreator() {
@@ -26,32 +30,34 @@ export default function InvoiceCreator() {
 		from: { marginTop: 200 },
 		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 200 }
+		config: { duration: 200 },
 	});
 	const history = useHistory();
 
 	const [saveInvoice] = useMutation(CREATE_INVOICE);
 	const [updateInvoice] = useMutation(UPDATE_INVOICE);
+	const [createClient] = useMutation(CREATE_CLIENT);
 	const { type } = useParams();
 	const [isClientOpen, setClientOpen] = useState(false);
 	const clientTransition = useTransition(isClientOpen, null, {
 		from: { marginTop: 200 },
 		enter: { marginTop: 0 },
 		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 200 }
+		config: { duration: 200 },
 	});
 	const { invoice: invoiceData, user } = useSelector((state: any) => state);
 	const { state } = useLocation();
+	const { isLoggedIn, id } = user;
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (state) {
 			dispatch({
 				type: 'SET_CLIENT',
-				payload: { ...state }
+				payload: { ...state },
 			});
 		}
-	}, [state, dispatch]);
+	}, [state, dispatch, invoiceData.client.id]);
 
 	const totalCost = invoiceData.products.reduce((prev: number, acc: any) => {
 		if (acc.quantity) {
@@ -68,11 +74,11 @@ export default function InvoiceCreator() {
 			setErrorMessage('Please add some data to your invoice.');
 			return;
 		}
-		if (!user.isLoggedIn) {
+		if (!isLoggedIn) {
 			try {
 				saveInvoiceToLocalStorage({
 					...invoiceData,
-					total: totalCost
+					total: totalCost,
 				});
 				history.push('/invoices');
 			} catch (e) {
@@ -81,47 +87,68 @@ export default function InvoiceCreator() {
 		}
 		switch (type) {
 			case 'creator':
-				return saveInvoice({
-					variables: {
-						ClientId: Number.parseInt(invoiceData.client.id),
-						products: [...invoiceData.products],
-						isPaid: invoiceData.isPaid,
-						total: totalCost,
-						dateDue: invoiceData.dateDue
-					}
-				})
-					.then(res => {
-						const { data } = res;
-						if (data.createInvoice.id) {
-							dispatch({ type: 'RESET' });
-							history.push('/invoices');
-						}
+				if (isLoggedIn) {
+					return saveInvoice({
+						variables: {
+							ClientId: Number.parseInt(invoiceData.client.id),
+							products: [...invoiceData.products],
+							isPaid: invoiceData.isPaid,
+							total: totalCost,
+							dateDue: invoiceData.dateDue,
+						},
 					})
-					.catch(errors => {
-						setErrorMessage(errors.message);
-					});
+						.then((res) => {
+							const { data } = res;
+							if (data.createInvoice.id) {
+								dispatch({ type: 'RESET' });
+							}
+						})
+						.then(() => history.push('/invoices'))
+						.catch(() => {
+							if (!Number(invoiceData.client.id)) {
+								setErrorMessage('Had to create new client!');
+								createClient({
+									variables: {
+										...invoiceData.client,
+										UserId: Number(id),
+									},
+								}).then(({ data }) => {
+									return dispatch({
+										type: 'SET_CLIENT',
+										payload: {
+											...invoiceData.client,
+											id: data.createClient.id,
+										},
+									});
+								});
+							}
+						});
+				}
+				break;
 			case 'editor':
-				return updateInvoice({
-					variables: {
-						id: Number.parseInt(invoiceData.id),
-						ClientId: Number.parseInt(invoiceData.client.id),
-						products: [...invoiceData.products],
-						isPaid: invoiceData.isPaid,
-						total: totalCost,
-						dateDue: invoiceData.dateDue
-					}
-				})
-					.then(res => {
-						const { data } = res;
-						if (data.updateInvoice.id) {
-							dispatch({ type: 'RESET' });
-							history.push('/invoices');
-						}
+				if (isLoggedIn) {
+					return updateInvoice({
+						variables: {
+							id: Number.parseInt(invoiceData.id),
+							ClientId: Number.parseInt(invoiceData.client.id),
+							products: [...invoiceData.products],
+							isPaid: invoiceData.isPaid,
+							total: totalCost,
+							dateDue: invoiceData.dateDue,
+						},
 					})
-					.catch(errors => {
-						setErrorMessage(errors.message);
-					});
-
+						.then((res) => {
+							const { data } = res;
+							if (data.updateInvoice?.id) {
+								dispatch({ type: 'RESET' });
+							}
+						})
+						.then(() => history.push('/invoices'))
+						.catch((errors) => {
+							setErrorMessage(errors.message);
+						});
+				}
+				break;
 			default:
 				return;
 		}
@@ -163,8 +190,8 @@ export default function InvoiceCreator() {
 									dispatch({
 										type: 'REMOVE_PRODUCT',
 										payload: {
-											index
-										}
+											index,
+										},
 									});
 								}}>
 								<p>
@@ -217,7 +244,7 @@ export default function InvoiceCreator() {
 						window.scroll({
 							top: 0,
 							left: 0,
-							behavior: 'smooth'
+							behavior: 'smooth',
 						});
 					}}>
 					<AddCircle />
@@ -232,11 +259,12 @@ export default function InvoiceCreator() {
 				<h3>
 					Due Date:{' '}
 					<input
+						required
 						type='date'
 						name='dueDate'
 						min={createDateInput()}
 						value={invoiceData.dateDue}
-						onChange={e => {
+						onChange={(e) => {
 							dispatch({ type: 'SET_DUE_DATE', payload: e.target.value });
 						}}
 					/>
@@ -248,7 +276,7 @@ export default function InvoiceCreator() {
 						onChange={() =>
 							dispatch({
 								type: 'MARK_PAID',
-								payload: !invoiceData.isPaid
+								payload: !invoiceData.isPaid,
 							})
 						}
 						inputProps={{ 'aria-label': 'Mark as paid' }}

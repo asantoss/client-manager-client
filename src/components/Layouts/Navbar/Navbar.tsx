@@ -12,11 +12,6 @@ function Navbar() {
 					<PlusOne />
 				</IconButton>
 			</NavLink>
-			<NavLink to='/invoices' activeClassName='current'>
-				<IconButton color='inherit'>
-					<Receipt />
-				</IconButton>
-			</NavLink>
 		</Bottombar>
 	);
 }
