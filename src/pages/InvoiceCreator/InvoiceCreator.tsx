@@ -241,12 +241,7 @@ export default function InvoiceCreator() {
 				<IconButton
 					className='panel-actions'
 					onClick={() => {
-						setProductOpen(!isProductOpen);
-						window.scroll({
-							top: 0,
-							left: 0,
-							behavior: 'smooth',
-						});
+						setProductOpen(!isProductOpen)
 					}}>
 					<AddCircle />
 					<p>Add Product</p>
