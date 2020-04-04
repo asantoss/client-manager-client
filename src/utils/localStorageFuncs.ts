@@ -23,7 +23,15 @@ export function saveInvoiceToLocalStorage(invoice: Invoice): void {
 		);
 	}
 	if (filteredInvoices.length > 0) {
-		return;
+		const index = localStorageInvoicesParsed.indexOf(filteredInvoices[0]);
+		return localStorage.setItem(
+			'invoices',
+			JSON.stringify([
+				...localStorageInvoicesParsed.slice(0, index),
+				invoice,
+				...localStorageInvoicesParsed.slice(index + 1),
+			])
+		);
 	} else {
 		invoice.id = Math.floor(Math.random() * (999 - 1) + 1).toString();
 		return localStorage.setItem(

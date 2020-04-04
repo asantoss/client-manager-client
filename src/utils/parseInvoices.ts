@@ -1,6 +1,6 @@
 import InvoiceType, { Product } from '../types/Invoice';
 import moment from 'moment';
-import dateFunction from './dateFunction';
+
 interface LOGINQUERY {
 	id?: string;
 	companyName: string;

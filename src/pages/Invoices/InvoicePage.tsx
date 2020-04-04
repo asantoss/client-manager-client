@@ -39,7 +39,7 @@ const InvoicesPage: React.FC<Props> = () => {
 			setInvoices((s) => [...invoicesData]);
 			setToBePaid((s) => [...toBePaidData]);
 		}
-		if (!user.isLoggedIn && !data) {
+		if (!user.isLoggedIn) {
 			const [
 				invoicesData,
 				overDueData,
@@ -68,10 +68,15 @@ const InvoicesPage: React.FC<Props> = () => {
 					...localInvoices.slice(index + 1),
 				];
 				localStorage.setItem('invoices', JSON.stringify(newData));
-				return setInvoices((s) => [
-					...s.slice(0, index),
-					...s.slice(index + 1),
-				]);
+				const [
+					invoicesData,
+					overDueData,
+					toBePaidData,
+				]: InvoiceType[][] = parseInvoicesFromLocal();
+				setOverDue((s) => [...overDueData]);
+				setInvoices((s) => [...invoicesData]);
+				setToBePaid((s) => [...toBePaidData]);
+				return;
 			}
 		}
 		const { data } = await removeInvoice({

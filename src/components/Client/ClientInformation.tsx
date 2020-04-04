@@ -8,7 +8,6 @@ import {
 	CircularProgress,
 	Typography,
 } from '@material-ui/core';
-import { css } from '@emotion/core';
 import { ClientInformationForm } from '.';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation } from '@apollo/react-hooks';
@@ -80,11 +79,11 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 	if (loading) {
 		return (
 			<div
-				css={css`
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-				`}>
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					flexDirection: 'column',
+				}}>
 				<Typography>Setting all of the client information...</Typography>
 				<br />
 				<CircularProgress color='secondary' />

@@ -80,6 +80,7 @@ export default function InvoiceCreator() {
 					...invoiceData,
 					total: totalCost,
 				});
+				dispatch({ type: 'RESET' });
 				history.push('/invoices');
 			} catch (e) {
 				setErrorMessage("Couldn't save invoice to local storage.");
