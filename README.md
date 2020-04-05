@@ -26,4 +26,4 @@ To get the this App running locally:
 
 - `App.js` - The entry point to our application. This file defines our routes.
 - `Components/` - This folder contains subfolders of all the components.
-- `Components/component` - This folder contains teh definition of each component along if an index file to export and define styles.
+- `Components/component` - This folder contains the definition of each component along if an index file to export and define styles.
