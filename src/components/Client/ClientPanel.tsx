@@ -4,6 +4,8 @@ import { Button, MainActions } from '../../styles';
 import { Client } from '../../types/Invoice';
 import { AppState } from '../../reducers';
 import ClientInformation from './ClientInformation';
+import { IconButton } from '@material-ui/core';
+import { Delete, Add } from '@material-ui/icons';
 
 interface ClientPanelProps {
 	setClientOpen: Function;
@@ -29,6 +31,14 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 		saveClientToLocalStorage(client);
 		setClientOpen(false);
 	};
+	const handleRemoveClient = (client: Client, index: number) => {
+		const newClients = [
+			...localClients.slice(0, index),
+			...localClients.slice(index + 1),
+		];
+		localStorage.setItem('clients', JSON.stringify([...newClients]));
+		setlocalClients(newClients);
+	};
 	return (
 		<div className='invoice-panel client-panel'>
 			<MainActions
@@ -52,12 +62,21 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 						<h5>Recently Used</h5>
 						{localClients.map((client, index) => {
 							return (
-								<div
-									onClick={() => handleSetClient(client)}
-									className='client'
-									key={index}>
-									<span>{`${client.firstName + client.lastName}`}</span>
-									<span>{client.email}</span>
+								<div className='client' key={index}>
+									<span className='client-name'>{`${
+										client.firstName + ' ' + client.lastName
+									}`}</span>
+									<span className='client-email'>{client.email}</span>
+									<IconButton
+										className='add'
+										onClick={() => handleSetClient(client)}>
+										<Add />
+									</IconButton>
+									<IconButton
+										className='delete'
+										onClick={() => handleRemoveClient(client, index)}>
+										<Delete />
+									</IconButton>
 								</div>
 							);
 						})}

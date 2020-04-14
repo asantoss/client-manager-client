@@ -54,7 +54,9 @@ export default function InvoiceCreator() {
 		setErrorMessage('');
 		if (
 			invoiceData.products.length === 0 ||
-			invoiceData.client.firstName.length === 0
+			!invoiceData.client.firstName ||
+			!invoiceData.client.lastName ||
+			!invoiceData.client.email
 		) {
 			setErrorMessage('Please add some data to your invoice.');
 			return;
@@ -254,7 +256,19 @@ export default function InvoiceCreator() {
 					<Button className='success' onClick={handleSaveInvoice}>
 						Save
 					</Button>
-					<Button className='success' onClick={() => makePDf(invoiceData)}>
+					<Button
+						className='success'
+						onClick={() => {
+							if (
+								invoiceData.products.length === 0 ||
+								!invoiceData.client.firstName ||
+								!invoiceData.client.lastName ||
+								!invoiceData.client.email
+							) {
+								return setErrorMessage('Please check your invoice Data!');
+							}
+							makePDf(invoiceData);
+						}}>
 						Download PDF
 					</Button>
 				</div>

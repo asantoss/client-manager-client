@@ -51,18 +51,18 @@ body {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		padding: 2em;
 	}
 	.client {
 		cursor: pointer;
 		display: grid;
-		grid-template-columns: 1fr;
+		grid-template-columns: 3fr 1fr 1fr;
+		align-items: center;
+		justify-items: start;
 		font-size: 1.2em;
+		padding: 1em 0;
 		color: white;
 		margin: 0.2em;
-		margin: 1em auto;
-		padding: 0 1em;
-		border-bottom: 0.5px solid ${({ theme }) => theme.colors.background};
+		grid-gap: 1em;
 		* {
 			margin: 0.1em 0;
 		}
@@ -70,13 +70,26 @@ body {
 			cursor: pointer;
 			border: 1px solid ${({ theme }) => theme.colors.background};
 		}
+		&-name,&-email{
+			grid-column: span 2;
+		}
+		button{
+			grid-column: 3;
+			grid-row: 1;
+			justify-self: center;
+			padding: 0;
+			color: ${({ theme }) => theme.colors.variants.success};
+			&.delete {
+				grid-row: 2;
+				color: ${({ theme }) => theme.colors.variants.danger};
+			}
+			}
 	}
 
 .client-form{
-	display: grid;
-	grid-template-columns: 1.5fr 1.5fr;
+	display: flex;
+	flex-direction: column;
 	width: 80%;
-	grid-gap: 1em;
 	align-content: center;
 	label {
 		text-transform: capitalize;
@@ -84,9 +97,6 @@ body {
 	.client_input {
 		background-color: white;
 		margin: 0.5em;
-	}
-	& > :last-child {
-		grid-column: span 2;
 	}
 	button {
 		justify-self: center;
@@ -129,11 +139,13 @@ export const ModalStyled = styled.div`
 	justify-content: center;
 	.invoice-panel {
 		position: absolute;
+		width: 80%;
+		max-width: 600px;
 		top: 10px;
 		display: flex;
 		flex-direction: column;
 		overflow: auto;
-		padding: 20px 50px 20px 20px;
+		padding: 1em;
 		label {
 			padding-left: 1em;
 		}
