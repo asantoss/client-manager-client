@@ -5,11 +5,9 @@ import ProductPanel from '../../components/Products/ProductPanel';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddCircle } from '@material-ui/icons';
 import { useLocation, useHistory, useParams } from 'react-router-dom';
-import { useTransition } from 'react-spring';
 import { Button } from '../../styles/index';
-import { InvoiceCreatorContainer, ProductItem } from '.';
+import { InvoiceCreatorContainer } from '.';
 import ClientPanel from '../../components/Client/ClientPanel';
-import { animated } from 'react-spring';
 import {
 	makePDf,
 	converToCurrency,
@@ -26,25 +24,12 @@ import { saveInvoiceToLocalStorage } from '../../utils/localStorageFuncs';
 export default function InvoiceCreator() {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isProductOpen, setProductOpen] = useState(false);
-	const productTransition = useTransition(isProductOpen, null, {
-		from: { marginTop: 200 },
-		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 200 },
-	});
 	const history = useHistory();
-
 	const [saveInvoice] = useMutation(CREATE_INVOICE);
 	const [updateInvoice] = useMutation(UPDATE_INVOICE);
 	const [createClient] = useMutation(CREATE_CLIENT);
 	const { type } = useParams();
 	const [isClientOpen, setClientOpen] = useState(false);
-	const clientTransition = useTransition(isClientOpen, null, {
-		from: { marginTop: 200 },
-		enter: { marginTop: 0 },
-		leave: { opacity: 0, marginTop: 200, display: 'none' },
-		config: { duration: 200 },
-	});
 	const { invoice: invoiceData, user } = useSelector((state: any) => state);
 	const { state } = useLocation();
 	const { isLoggedIn, id } = user;
@@ -185,7 +170,8 @@ export default function InvoiceCreator() {
 				{invoiceData.products &&
 					invoiceData.products.map((product: any, index: number) => {
 						return (
-							<ProductItem
+							<div
+								className='product'
 								key={index}
 								onClick={() => {
 									dispatch({
@@ -209,39 +195,24 @@ export default function InvoiceCreator() {
 									<span>Price</span>
 									{product.price}
 								</p>{' '}
-							</ProductItem>
+							</div>
 						);
 					})}
+				{isProductOpen && (
+					<Modal>
+						<ProductPanel setProductOpen={setProductOpen} />
+					</Modal>
+				)}
 
-				{productTransition.map(({ item, key, props }) => {
-					if (item) {
-						return (
-							<Modal key={key}>
-								<animated.div style={props}>
-									<ProductPanel setProductOpen={setProductOpen} />
-								</animated.div>
-							</Modal>
-						);
-					}
-					return null;
-				})}
-
-				{clientTransition.map(({ item, key, props }) => {
-					return (
-						item &&
-						!isProductOpen && (
-							<Modal key={key}>
-								<animated.div style={props}>
-									<ClientPanel setClientOpen={setClientOpen} />
-								</animated.div>
-							</Modal>
-						)
-					);
-				})}
+				{isClientOpen && !isProductOpen && (
+					<Modal>
+						<ClientPanel setClientOpen={setClientOpen} />
+					</Modal>
+				)}
 				<IconButton
 					className='panel-actions'
 					onClick={() => {
-						setProductOpen(!isProductOpen)
+						setProductOpen(!isProductOpen);
 					}}>
 					<AddCircle />
 					<p>Add Product</p>

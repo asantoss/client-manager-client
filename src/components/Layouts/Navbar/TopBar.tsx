@@ -11,7 +11,7 @@ const TopBarStyled = styled.div`
 	background-color: ${({ theme }) => theme.colors.foreground};
 	top: 0;
 	left: 0;
-	z-index: 4;
+	z-index: 2;
 	padding: 0.2em 1em;
 	position: absolute;
 	display: flex;

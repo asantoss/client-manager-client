@@ -1,18 +1,5 @@
 import styled from 'styled-components';
 
-export const ProductPanelStyled = styled.div`
-	display: flex;
-	flex-direction: column;
-	overflow-x: hidden;
-	margin: 1.5em 0;
-	background-color: ${props => props.theme.colors.foreground};
-	label {
-		padding-left: 1em;
-	}
-	p {
-		margin: 1em;
-	}
-`;
 export const ProductForm = styled.form`
 	display: flex;
 	align-self: center;
@@ -64,22 +51,6 @@ export const ProductForm = styled.form`
 		}
 	}
 	transition: all 2s;
-	.product {
-		display: flex;
-		justify-content: space-between;
-		text-align: left;
-		padding: 0 1em;
-		color: white;
-		& > p {
-			margin: 0.5em 0;
-			display: flex;
-			flex-direction: column;
-			font-size: 0.9em;
-			span {
-				font-size: 0.7em;
-			}
-		}
-	}
 	.recently-used {
 		display: flex;
 		justify-content: space-between;

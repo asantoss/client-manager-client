@@ -4,7 +4,6 @@ import { Button, MainActions } from '../../styles';
 import { Client } from '../../types/Invoice';
 import { AppState } from '../../reducers';
 import ClientInformation from './ClientInformation';
-import { ClientPanelStyled } from '.';
 
 interface ClientPanelProps {
 	setClientOpen: Function;
@@ -31,7 +30,7 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 		setClientOpen(false);
 	};
 	return (
-		<ClientPanelStyled className='invoice-panel'>
+		<div className='invoice-panel client-panel'>
 			<MainActions
 				pageName='Client'
 				closeFunction={() => setClientOpen(false)}
@@ -77,7 +76,7 @@ const ClientPanel: React.FC<ClientPanelProps> = ({ setClientOpen }) => {
 						})}
 				</div>
 			)}
-		</ClientPanelStyled>
+		</div>
 	);
 };
 

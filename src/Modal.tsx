@@ -9,9 +9,13 @@ const Modal: React.FC<{ children: any }> = ({ children }) => {
 		elRef.current = div;
 	}
 	React.useEffect(() => {
+		document.body.style.overflow = 'hidden';
 		const modalRoot = document.getElementById('modal');
 		modalRoot?.appendChild(elRef.current);
-		return () => modalRoot?.removeChild(elRef.current);
+		return () => {
+			document.body.style.overflow = '';
+			modalRoot?.removeChild(elRef.current);
+		};
 	}, []);
 	return createPortal(<ModalStyled>{children}</ModalStyled>, elRef.current);
 };

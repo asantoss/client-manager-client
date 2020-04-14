@@ -8,7 +8,6 @@ import {
 	CircularProgress,
 	Typography,
 } from '@material-ui/core';
-import { ClientInformationForm } from '.';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_CLIENT } from '../../apollo/constants';
@@ -46,9 +45,6 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 			lastName: '',
 			email: '',
 			phoneNumber: '',
-			address: '',
-			city: '',
-			zipCode: '',
 		},
 		validationSchema: ClientSchema,
 		onSubmit: (values) => {
@@ -67,13 +63,13 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 					type: 'SET_CLIENT',
 					payload: { ...values, id: Number(data?.createClient?.id) },
 				});
-				setTimeout(() => setClientOpen(false), 500);
+				setClientOpen(false);
 			});
 		} else {
 			setLoading(!loading);
 			saveToLocal({ ...values });
 			dispatch({ type: 'SET_CLIENT', payload: values });
-			setTimeout(() => setClientOpen(false), 500);
+			setClientOpen(false);
 		}
 	};
 	if (loading) {
@@ -91,7 +87,7 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 		);
 	}
 	return (
-		<ClientInformationForm onSubmit={formik.handleSubmit}>
+		<form className='client-form' onSubmit={formik.handleSubmit}>
 			<TextField
 				className='client_input'
 				name='firstName'
@@ -134,37 +130,6 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 				placeholder='Optional'
 				value={formik.values.phoneNumber}
 			/>
-			<TextField
-				className='client_input'
-				name='address'
-				label='Address'
-				variant='outlined'
-				style={{ flexGrow: 2 }}
-				onChange={formik.handleChange}
-				onBlur={formik.handleChange}
-				value={formik.values.address}
-				placeholder='Optional'
-			/>
-			<TextField
-				className='client_input'
-				name='city'
-				label='City'
-				variant='outlined'
-				onChange={formik.handleChange}
-				onBlur={formik.handleChange}
-				value={formik.values.city}
-				placeholder='Optional'
-			/>
-			<TextField
-				className='client_input'
-				name='zipCode'
-				label='Zip Code'
-				variant='outlined'
-				onChange={formik.handleChange}
-				onBlur={formik.handleChange}
-				value={formik.values.zipCode}
-				placeholder='Optional'
-			/>
 			<Button
 				style={{
 					color: 'white',
@@ -175,7 +140,7 @@ const ClientInformation: React.FC<ClientInformationProps> = ({
 				type='submit'>
 				Save
 			</Button>
-		</ClientInformationForm>
+		</form>
 	);
 };
 

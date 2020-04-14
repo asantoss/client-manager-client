@@ -5,7 +5,7 @@ import { Close } from '@material-ui/icons';
 import { useDispatch } from 'react-redux';
 import { useSpring } from 'react-spring';
 import { Button, MainActions } from '../../styles';
-import { ProductPanelStyled, ProductForm } from '.';
+import { ProductForm } from '.';
 import { Product } from '../../types/Invoice';
 
 interface ProductPanelProps {
@@ -17,7 +17,7 @@ interface ProductPanelProps {
 const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 	const spring = useSpring({
 		from: { display: 'none', opacity: 0 },
-		to: { display: 'flex', opacity: 1 }
+		to: { display: 'flex', opacity: 1 },
 	});
 	const [localProducts, setlocalProducts] = React.useState<Product[]>([]);
 	const dispatch = useDispatch();
@@ -27,9 +27,9 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 			productName: '',
 			description: '',
 			price: 0,
-			quantity: 1
+			quantity: 1,
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			const { productName, description, price, quantity } = values;
 			dispatch({
 				type: 'ADD_PRODUCT',
@@ -37,12 +37,12 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 					productName,
 					description,
 					price,
-					quantity: quantity.toString()
-				}
+					quantity: quantity.toString(),
+				},
 			});
 			saveProductToLocalStorage({ productName, description, price, quantity });
 			setProductOpen(false);
-		}
+		},
 	});
 
 	const localStorageProducts = localStorage.getItem('products');
@@ -56,7 +56,7 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 		setIsflat(product.quantity > 1 ? false : true);
 		formik.setValues(
 			{
-				...product
+				...product,
 			},
 			true
 		);
@@ -66,7 +66,7 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 		localStorage.removeItem('products');
 	};
 	return (
-		<ProductPanelStyled className='invoice-panel'>
+		<div className='invoice-panel'>
 			<MainActions
 				pageName='Products'
 				closeFunction={() => setProductOpen(false)}
@@ -149,7 +149,6 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 						</div>
 					</div>
 				)}
-				<hr />
 				<div className='recently-used'>
 					{' '}
 					<p>Recently Used</p>
@@ -161,8 +160,8 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 					localProducts.map((product: Product, index: number) => {
 						return (
 							<div
-								key={index}
 								className='product'
+								key={index}
 								onClick={() => loadProduct(product)}>
 								<p>
 									<span>Name: </span>
@@ -185,7 +184,7 @@ const ProductPanel: React.FC<ProductPanelProps> = ({ setProductOpen }) => {
 					Save
 				</Button>
 			</ProductForm>
-		</ProductPanelStyled>
+		</div>
 	);
 };
 
