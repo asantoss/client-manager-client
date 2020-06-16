@@ -29,7 +29,6 @@ const InvoicesPage: React.FC<Props> = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	React.useEffect(() => {
-		debugger;
 		if (user.isLoggedIn && data && data.getMe) {
 			const [
 				invoicesData,
