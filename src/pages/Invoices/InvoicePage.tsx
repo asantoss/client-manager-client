@@ -29,25 +29,25 @@ const InvoicesPage: React.FC<Props> = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	React.useEffect(() => {
-		if (data && user.isLoggedIn && data.getMe) {
+		debugger;
+		if (user.isLoggedIn && data && data.getMe) {
 			const [
 				invoicesData,
 				overDueData,
 				toBePaidData,
 			]: InvoiceType[][] = parseInvoices(data.getMe);
-			setOverDue((s) => [...overDueData]);
-			setInvoices((s) => [...invoicesData]);
-			setToBePaid((s) => [...toBePaidData]);
-		}
-		if (!user.isLoggedIn) {
+			setOverDue(() => [...overDueData]);
+			setInvoices(() => [...invoicesData]);
+			setToBePaid(() => [...toBePaidData]);
+		} else {
 			const [
 				invoicesData,
 				overDueData,
 				toBePaidData,
 			]: InvoiceType[][] = parseInvoicesFromLocal();
-			setOverDue((s) => [...overDueData]);
-			setInvoices((s) => [...invoicesData]);
-			setToBePaid((s) => [...toBePaidData]);
+			setOverDue(() => [...overDueData]);
+			setInvoices(() => [...invoicesData]);
+			setToBePaid(() => [...toBePaidData]);
 		}
 	}, [data, user]);
 	const handleView = async (invoice: InvoiceType) => {
@@ -73,9 +73,9 @@ const InvoicesPage: React.FC<Props> = () => {
 					overDueData,
 					toBePaidData,
 				]: InvoiceType[][] = parseInvoicesFromLocal();
-				setOverDue((s) => [...overDueData]);
-				setInvoices((s) => [...invoicesData]);
-				setToBePaid((s) => [...toBePaidData]);
+				setOverDue(() => [...overDueData]);
+				setInvoices(() => [...invoicesData]);
+				setToBePaid(() => [...toBePaidData]);
 				return;
 			}
 		}
@@ -93,7 +93,7 @@ const InvoicesPage: React.FC<Props> = () => {
 			return setInvoices((s) => [...s.slice(0, index), ...s.slice(index + 1)]);
 		}
 	};
-	if (queryLoading) {
+	if (queryLoading && user.isLoggedIn) {
 		return <p>Loading.....</p>;
 	}
 	let overDueTotal = overDue.reduce((acc, curr) => (acc += curr.total), 0);

@@ -62,7 +62,6 @@ export const parseInvoices = (data: LOGINQUERY) => {
 				isPaid,
 				products,
 				client: {
-					invoices,
 					...client,
 				},
 				company: {
